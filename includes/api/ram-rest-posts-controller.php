@@ -593,9 +593,25 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
         $_posts = $wpdb->get_results($sql);
         $posts =array();
         foreach ($_posts as $post) {
-            
-            $_data["post_id"]  =$post->ID;
-            $_data["post_title"]  =$post->post_title;
+            $post_id = $post->ID;
+            $post_date = $post->post_date;
+            $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->comments." where  comment_approved = '1' and comment_post_ID=".$post_id);
+            $like_count = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->postmeta." where meta_value='like' and post_id=".$post_id);
+            $images = getPostImages($post->post_content,$post_id);
+            $_data["post_id"] = $post_id;
+            $_data["post_title"] = $post->post_title;
+            $_data["post_date"] = $post_date;
+            $_data["comment_total"] = $comment_total;
+            $_data['like_count'] = $like_count;
+            $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
+            $_data['content_first_image'] = $images['content_first_image'];
+            $_data['post_medium_image_300'] = $images['post_medium_image_300'];
+            $_data['post_thumbnail_image_624'] = $images['post_thumbnail_image_624'];
+            $_data['post_frist_image'] = $images['post_frist_image'];
+            $_data['post_medium_image'] = $images['post_medium_image'];
+            $_data['post_large_image'] = $images['post_large_image'];
+            $_data['post_full_image'] = $images['post_full_image'];
+            $_data['post_all_images'] = $images['post_all_images'];
             $posts[]=$_data;
         }
 

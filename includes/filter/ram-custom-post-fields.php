@@ -3,7 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function custom_post_fields( $data, $post, $request) { 
-    global $wpdb;
+    global $wpdb,$is_chrome;
     $_data = $data->data; 
     $post_id =$post->ID;
 
@@ -107,16 +107,14 @@ function custom_post_fields( $data, $post, $request) {
     $_data['next_post_title'] = !empty($next_post->post_title)?$next_post->post_title:null;
     $_data['previous_post_id'] = !empty($previous_post->ID)?$previous_post->ID:null;
     $_data['previous_post_title'] = !empty($previous_post->post_title)?$previous_post->post_title:null;
-    $init_images_url = "~([\s\S]+)https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))([\s\S]+)~i";
+    $init_np_images_url = "~([\s\S]+)https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))([\s\S]+)~i";
     if( $is_chrome ) {
-        $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$2.webp";
+        $cdn_np_images_url = "https://cdn.tangel.me/wp-content/uploads/$2.webp";
     } else {
-        $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$2";
+        $cdn_np_images_url = "https://cdn.tangel.me/wp-content/uploads/$2";
     }
-    $next_post_thumbnail_image_url = get_the_post_thumbnail($next_post->ID, 'thumbnail');
-    $previous_post_thumbnail_image_url = get_the_post_thumbnail($previous_post->ID, 'thumbnail');
-    $next_post_thumbnail_image = preg_replace( $init_images_url, $cdn_images_url, $next_post_thumbnail_image_url);
-    $previous_post_thumbnail_image = preg_replace( $init_images_url, $cdn_images_url, $previous_post_thumbnail_image_url);
+    $next_post_thumbnail_image = preg_replace( $init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail($next_post->ID, 'thumbnail'));
+    $previous_post_thumbnail_image = preg_replace( $init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail($previous_post->ID, 'thumbnail'));
     $_data['next_post_thumbnail_image'] = !empty($next_post->ID)?$next_post_thumbnail_image:null;
     $_data['previous_post_thumbnail_image'] = !empty($previous_post->ID)?$previous_post_thumbnail_image:null;  
     unset($_data['format']);
