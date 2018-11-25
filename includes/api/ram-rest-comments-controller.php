@@ -223,7 +223,17 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller{
                 $data["id"]=$comment->comment_ID;
                 $data["author_name"]=$comment->comment_author;
                 $author_url =$comment->comment_author_url;
-                $data["author_url"]=strpos($author_url, "wx.qlogo.cn")?$author_url:"../../images/gravatar.png";
+                $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
+                $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
+                $cdn_gravatar_url = "https://gravatar.tangel.me/avatar/$1";
+                $gravatar_url_replace = preg_replace($gravatar_avatar_url, $cdn_gravatar_url, $author_gravatar_urls);
+                if( get_comment_meta( $comment->comment_ID, 'qq_avatar', true ) ){
+                    $qq_number =  get_comment_meta( $comment->comment_ID, 'qq_avatar', true );
+                    $author_url = 'https://q2.qlogo.cn/headimg_dl?dst_uin='.$qq_number.'&spec=100';
+                    $data["author_avatar_urls"] = $author_url;
+                } else {
+                    $data["author_avatar_urls"] = strpos($author_url, "wx.qlogo.cn") ? $author_url : $gravatar_url_replace;
+                }
                 $data["date"]=time_tran($comment->comment_date);
                 $data["content"]=$comment->comment_content;
                 $data["formId"]=$comment->formId;
@@ -255,7 +265,17 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller{
                     $data["id"]=$comment->comment_ID;
                     $data["author_name"]=$comment->comment_author;
                     $author_url =$comment->comment_author_url;
-                    $data["author_url"]=strpos($author_url, "wx.qlogo.cn")?$author_url:"../../images/gravatar.png";
+                    $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
+                    $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
+                    $cdn_gravatar_url = "https://gravatar.tangel.me/avatar/$1";
+                    $gravatar_url_replace = preg_replace($gravatar_avatar_url, $cdn_gravatar_url, $author_gravatar_urls);
+                    if( get_comment_meta( $comment->comment_ID, 'qq_avatar', true ) ){
+                        $qq_number =  get_comment_meta( $comment->comment_ID, 'qq_avatar', true );
+                        $author_url = 'https://q2.qlogo.cn/headimg_dl?dst_uin='.$qq_number.'&spec=100';
+                        $data["author_avatar_urls"] = $author_url;
+                    } else {
+                        $data["author_avatar_urls"] = strpos($author_url, "wx.qlogo.cn") ? $author_url : $gravatar_url_replace;
+                    }
                     $data["date"]=time_tran($comment->comment_date);
                     $data["content"]=$comment->comment_content;
                     $data["formId"]=$comment->formId;
@@ -363,13 +383,16 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller{
         if(get_post($post)==null || $post== 0 || !is_int($post))
         {
              return new WP_Error( 'error', 'postId 参数错误', array( 'status' => 500 ) );
-        }
+        } 
         else
         {
-            if(!comments_open($post))
+            if (!comments_open($post))
             {
-                return new WP_Error( 'error', '文章留言关闭', array( 'status' => 400 ) );
-
+                return new WP_Error( 'error', '文章吐槽板关闭', array( 'status' => 400 ) );
+            }
+            if (has_tag('excerpt',$post)) 
+            {
+                return new WP_Error( 'error', '该文章禁止吐槽', array('status' => 400 ));
             }
             global $wpdb; 
             $status = $wpdb->get_row($wpdb->prepare("SELECT post_status, comment_status FROM $wpdb->posts WHERE ID = %d", $post));

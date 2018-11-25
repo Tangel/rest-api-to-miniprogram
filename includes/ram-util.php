@@ -28,6 +28,18 @@ function get_post_image_url($image_id, $size='full'){
     return false;   
 }
 
+function cdn_images_url_replace($url) {
+    global $is_chrome;
+    $init_image_url = "~https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))~i";
+    if( $is_chrome ) {
+        $cdn_image_url = "https://cdn.tangel.me/wp-content/uploads/$1.webp";
+    } else {
+        $cdn_image_url = "https://cdn.tangel.me/wp-content/uploads/$1";
+    }
+    $replace_url = preg_replace($init_image_url, $cdn_image_url, $url);
+    return $replace_url;
+}
+
 function getPostImages($content,$postId){
     $content_first_image= get_post_content_first_image($content);
     $post_frist_image=$content_first_image;
@@ -101,22 +113,17 @@ function getPostImages($content,$postId){
      }
 
      //$post_all_images = get_attached_media( 'image', $postId);
-     $post_all_images= get_post_content_images($content);
-
-     $_data['post_frist_image']=$post_frist_image;
-     $_data['post_thumbnail_image']=$post_thumbnail_image;
-     $_data['post_medium_image']=$post_medium_image;
-     $_data['post_large_image']=$post_large_image;
-     $_data['post_full_image']=$post_full_image;
-     $_data['post_all_images']=$post_all_images;
-
-     $_data['post_thumbnail_image_150']=$post_thumbnail_image_150;
-     $_data['post_medium_image_300']=$post_medium_image_300;
-     $_data['post_thumbnail_image_624']=$post_thumbnail_image_624;
-    
-    
-    $_data['content_first_image']=$content_first_image; 
-
+    $post_all_images = get_post_content_images($content);
+    $_data['post_frist_image'] = cdn_images_url_replace($post_frist_image);
+    $_data['post_thumbnail_image'] = cdn_images_url_replace($post_thumbnail_image);
+    $_data['post_medium_image'] = cdn_images_url_replace($post_medium_image);
+    $_data['post_large_image'] = cdn_images_url_replace($post_large_image);
+    $_data['post_full_image'] = cdn_images_url_replace($post_full_image);
+    $_data['post_all_images'] = cdn_images_url_replace($post_all_images);
+    $_data['post_thumbnail_image_150'] = cdn_images_url_replace($post_thumbnail_image_150);
+    $_data['post_medium_image_300'] = cdn_images_url_replace($post_medium_image_300);
+    $_data['post_thumbnail_image_624'] = cdn_images_url_replace($post_thumbnail_image_624);
+    $_data['content_first_image'] = cdn_images_url_replace($content_first_image);
 
     return  $_data; 
            

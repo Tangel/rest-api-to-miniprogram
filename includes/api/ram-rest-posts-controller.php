@@ -85,7 +85,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
             // Register our schema callback.
             'schema' => array( $this, 'get_public_item_schema' ),
         ) );
-
+        /*
         register_rest_route( $this->namespace, '/' . $this->resource_name.'/hotpostthisyear', array(
             array(
                 'methods'   => 'GET',
@@ -190,9 +190,10 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
             ),
             // Register our schema callback.
             'schema' => array( $this, 'get_public_item_schema' ),
-        ) );                  
+        ) );
+        */                  
     }
-
+    /*
     function getallpraise ($request)
     {
         global $wpdb;    
@@ -521,6 +522,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
         return $response;  
 
     }
+    */
     function getPostSwipe($request) {    
     
         global $wpdb;
@@ -542,7 +544,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
                 $_data["post_permalink"] =$post_permalink;
                 $_data['type']="detailpage";  
                 
-                $pageviews = (int) get_post_meta( $post_id, 'wl_pageviews',true);
+                $pageviews = (int) get_post_meta( $post_id, 'views',true);
                 $_data['pageviews'] = $pageviews;
 
                 $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->comments." where  comment_approved = '1' and comment_post_ID=".$post_id);
@@ -725,6 +727,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
         return true;
     }
 
+    /*
     public function get_praise_permissions_check($request)
     {
         $openid= $request['openid'];       
@@ -779,8 +782,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
         return true;
 
     }
-
-
+    */
 
    
   

@@ -13,7 +13,12 @@ function custom_post_fields( $data, $post, $request) {
      $upload_dir = wp_upload_dir();
      $content = str_replace( 'http:'.strstr($siteurl, '//'), 'https:'.strstr($siteurl, '//'), $content);
      $content = str_replace( 'http:'.strstr($upload_dir['baseurl'], '//'), 'https:'.strstr($upload_dir['baseurl'], '//'), $content);
-    
+     $init_images_url = "~https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\S+)\.(jpg|png|jpeg))~i";
+     if( $is_chrome ) {
+         $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$1.webp";
+     } else {
+         $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$1";
+     }
     $images =getPostImages($content, $post_id); 
     $_data['post_thumbnail_image']=$images['post_thumbnail_image'];
     $_data['content_first_image']=$images['content_first_image'];
@@ -30,12 +35,15 @@ function custom_post_fields( $data, $post, $request) {
     $_data['total_comments']=$comments_count->total_comments;
     $category =get_the_category($post_id);
     $_data['category_name'] =$category[0]->cat_name; 
+    $_content['rendered'] = $content;
+    $_content = preg_replace( $init_images_url, $cdn_images_url, $_content);
+    $_data['content'] = $_content;
     $post_date =$post->post_date;
     $_data['date'] =time_tran($post_date);
     $sql =$wpdb->prepare("SELECT COUNT(1) FROM ".$wpdb->postmeta." where meta_value='like' and post_id=%d",$post_id);
     $like_count = $wpdb->get_var($sql);
     $_data['like_count']= $like_count; 
-    $post_views = (int)get_post_meta($post_id, 'wl_pageviews', true);     
+    $post_views = (int)get_post_meta($post_id, 'views', true);     
     $params = $request->get_params();
      if ( isset( $params['id'] ) ) {
 
@@ -47,9 +55,9 @@ function custom_post_fields( $data, $post, $request) {
             $avatarurls[] = $_avatarurl;        
         }
       $post_views =$post_views+1;  
-      if(!update_post_meta($post_id, 'wl_pageviews', $post_views))   
+      if(!update_post_meta($post_id, 'views', $post_views))   
       {  
-        add_post_meta($post_id, 'wl_pageviews', 1, true);  
+        add_post_meta($post_id, 'views', 1, true);  
       } 
       $_data['avatarurls']= $avatarurls;
 
@@ -99,6 +107,18 @@ function custom_post_fields( $data, $post, $request) {
     $_data['next_post_title'] = !empty($next_post->post_title)?$next_post->post_title:null;
     $_data['previous_post_id'] = !empty($previous_post->ID)?$previous_post->ID:null;
     $_data['previous_post_title'] = !empty($previous_post->post_title)?$previous_post->post_title:null;
+    $init_images_url = "~([\s\S]+)https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))([\s\S]+)~i";
+    if( $is_chrome ) {
+        $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$2.webp";
+    } else {
+        $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$2";
+    }
+    $next_post_thumbnail_image_url = get_the_post_thumbnail($next_post->ID, 'thumbnail');
+    $previous_post_thumbnail_image_url = get_the_post_thumbnail($previous_post->ID, 'thumbnail');
+    $next_post_thumbnail_image = preg_replace( $init_images_url, $cdn_images_url, $next_post_thumbnail_image_url);
+    $previous_post_thumbnail_image = preg_replace( $init_images_url, $cdn_images_url, $previous_post_thumbnail_image_url);
+    $_data['next_post_thumbnail_image'] = !empty($next_post->ID)?$next_post_thumbnail_image:null;
+    $_data['previous_post_thumbnail_image'] = !empty($previous_post->ID)?$previous_post_thumbnail_image:null;  
     unset($_data['format']);
     unset($_data['ping_status']);
     unset($_data['template']);
