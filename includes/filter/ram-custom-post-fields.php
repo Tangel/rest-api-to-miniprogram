@@ -3,7 +3,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function custom_post_fields( $data, $post, $request) { 
-    global $wpdb;
+    global $wpdb,$is_chrome;
     $_data = $data->data; 
     $post_id =$post->ID;
 
@@ -129,36 +129,3 @@ function custom_post_fields( $data, $post, $request) {
     $data->data = $_data;     
     return $data; 
 }
-
-
-//获取文章浏览次数
-  function post_views($before = '(点击 ', $after = ' 次)', $echo = 1)  
-  {  
-    global $post;  
-    $post_id = $post->ID;  
-    $views = (int)get_post_meta($post_id, 'wl_pageviews', true);  
-    if ($echo) echo $before, number_format($views), $after;  
-    else return $views;  
-  } 
-
-
-//增加或更新文章浏览次数
-  function addPostPageviews()  
-  {  
-    if (is_singular())   
-    {  
-      global $post;  
-      $post_id = $post->ID;  
-      if($post_id)   
-      {  
-        $post_views = (int)get_post_meta($post_id, 'wl_pageviews', true);  
-        if(!update_post_meta($post_id, 'wl_pageviews', ($post_views+1)))   
-        {  
-          add_post_meta($post_id, 'wl_pageviews', 1, true);  
-        }  
-      }  
-    }  
-  } 
-
-
-

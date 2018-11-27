@@ -119,18 +119,18 @@ if (version_compare(PHP_VERSION, '5.5.0', '<=') )
             </tr>     
 
             <tr valign="top">
-            <th scope="row">海报图片默认地址</th>
-            <td><input type="text" name="wf_poster_imageurl" style="width:400px; height:40px" value="<?php echo esc_attr( get_option('wf_poster_imageurl') ); ?>" /><br/><p style="color: #959595; display:inline">* 请输完整的图片地址，例如：https://www.watch-life.net/images/poster.jpg</p></td>
+            <th scope="row">海报图片默认网址</th>
+            <td><input type="text" name="wf_poster_imageurl" style="width:400px; height:40px" value="<?php echo esc_attr( get_option('wf_poster_imageurl') ); ?>" /><br/><p style="color: #959595; display:inline">* 请输完整的图片网址，例如：https://www.watch-life.net/images/poster.jpg</p></td>
             </tr>
 
             <tr valign="top">
-            <th scope="row">CDN 默认地址</th>
-            <td><input type="text" name="wf_cdn_url" style="width:600px" value="<?php echo esc_attr( get_option('wf_cdn_url') ); ?>" /><br/>(例如:<span style="color: blue">https://cdn.yoursite.com/</span>)</td>
+            <th scope="row">CDN 默认网址</th>
+            <td><input type="text" name="wf_cdn_url" style="width:400px; height:40px" value="<?php echo esc_attr( get_option('wf_cdn_url') ); ?>" /><br/><p style="color: #959595; display:inline">* 请输完整的 CDN 网址，例如：https://cdn.yoursite.com/</p></td>
             </tr>
 
             <tr valign="top">
-            <th scope="row">头像 CDN 默认地址</th>
-            <td><input type="text" name="wf_avatar_cdn_url" style="width:600px" value="<?php echo esc_attr( get_option('wf_avatar_cdn_url') ); ?>" /><br/>(例如:<span style="color: blue">https://cdn.yoursite.com/</span>，留空则使用 CDN 默认地址)</td>
+            <th scope="row">头像 CDN 默认网址</th>
+            <td><input type="text" name="wf_avatar_cdn_url" style="width:400px; height:40px" value="<?php echo esc_attr( get_option('wf_avatar_cdn_url') ); ?>" /><br/><p style="color: #959595; display:inline">* 请输完整的头像 CDN 网址，例如：https://cdn.yoursite.com/，留空则默认使用 CDN 网址</p></td>
             </tr>
                    
         </table>
