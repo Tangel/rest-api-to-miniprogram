@@ -3,22 +3,16 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 function custom_post_fields( $data, $post, $request) { 
-    global $wpdb,$is_chrome;
+    global $wpdb;
     $_data = $data->data; 
     $post_id =$post->ID;
 
     $content =get_the_content();
      
-     $siteurl = get_option('siteurl');
-     $upload_dir = wp_upload_dir();
-     $content = str_replace( 'http:'.strstr($siteurl, '//'), 'https:'.strstr($siteurl, '//'), $content);
-     $content = str_replace( 'http:'.strstr($upload_dir['baseurl'], '//'), 'https:'.strstr($upload_dir['baseurl'], '//'), $content);
-     $init_images_url = "~https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\S+)\.(jpg|png|jpeg))~i";
-     if( $is_chrome ) {
-         $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$1.webp";
-     } else {
-         $cdn_images_url = "https://cdn.tangel.me/wp-content/uploads/$1";
-     }
+    $siteurl = get_option('siteurl');
+    $upload_dir = wp_upload_dir();
+    $content = str_replace( 'http:'.strstr($siteurl, '//'), 'https:'.strstr($siteurl, '//'), $content);
+    $content = str_replace( 'http:'.strstr($upload_dir['baseurl'], '//'), 'https:'.strstr($upload_dir['baseurl'], '//'), $content);
     $images =getPostImages($content, $post_id); 
     $_data['post_thumbnail_image']=$images['post_thumbnail_image'];
     $_data['content_first_image']=$images['content_first_image'];
@@ -36,7 +30,7 @@ function custom_post_fields( $data, $post, $request) {
     $category =get_the_category($post_id);
     $_data['category_name'] =$category[0]->cat_name; 
     $_content['rendered'] = $content;
-    $_content = preg_replace( $init_images_url, $cdn_images_url, $_content);
+    $_content = cdn_images_url_replace($_content);
     $_data['content'] = $_content;
     $post_date =$post->post_date;
     $_data['date'] =time_tran($post_date);
@@ -107,11 +101,11 @@ function custom_post_fields( $data, $post, $request) {
     $_data['next_post_title'] = !empty($next_post->post_title)?$next_post->post_title:null;
     $_data['previous_post_id'] = !empty($previous_post->ID)?$previous_post->ID:null;
     $_data['previous_post_title'] = !empty($previous_post->post_title)?$previous_post->post_title:null;
-    $init_np_images_url = "~([\s\S]+)https://saki\.tangel\.me/wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))([\s\S]+)~i";
+    $init_np_images_url = "~([\s\S]+)".BLOG_URL."wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w*\-?\w*)\.(jpg|png|jpeg))([\s\S]+)~i";
     if( $is_chrome ) {
-        $cdn_np_images_url = "https://cdn.tangel.me/wp-content/uploads/$2.webp";
+        $cdn_np_images_url = esc_attr(get_option('wf_cdn_url'))."wp-content/uploads/$2.webp";
     } else {
-        $cdn_np_images_url = "https://cdn.tangel.me/wp-content/uploads/$2";
+        $cdn_np_images_url = esc_attr(get_option('wf_cdn_url'))."wp-content/uploads/$2";
     }
     $next_post_thumbnail_image = preg_replace( $init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail($next_post->ID, 'thumbnail'));
     $previous_post_thumbnail_image = preg_replace( $init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail($previous_post->ID, 'thumbnail'));

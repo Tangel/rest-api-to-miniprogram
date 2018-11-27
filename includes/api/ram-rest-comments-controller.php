@@ -241,7 +241,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller{
                 $author_url =$comment->comment_author_url;
                 $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
                 $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
-                $cdn_gravatar_url = "https://gravatar.tangel.me/avatar/$1";
+                $cdn_gravatar_url = esc_attr(get_option('wf_avatar_cdn_url'))==""?esc_attr(get_option('wf_cdn_url'))."avatar/$1":esc_attr(get_option('wf_avatar_cdn_url'))."avatar/$1";
                 $gravatar_url_replace = preg_replace($gravatar_avatar_url, $cdn_gravatar_url, $author_gravatar_urls);
                 if( get_comment_meta( $comment->comment_ID, 'qq_avatar', true ) ){
                     $qq_number =  get_comment_meta( $comment->comment_ID, 'qq_avatar', true );
@@ -283,7 +283,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller{
                     $author_url =$comment->comment_author_url;
                     $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
                     $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
-                    $cdn_gravatar_url = "https://gravatar.tangel.me/avatar/$1";
+                    $cdn_gravatar_url = esc_attr(get_option('wf_avatar_cdn_url'))==""?esc_attr(get_option('wf_cdn_url'))."avatar/$1":esc_attr(get_option('wf_avatar_cdn_url'))."avatar/$1";
                     $gravatar_url_replace = preg_replace($gravatar_avatar_url, $cdn_gravatar_url, $author_gravatar_urls);
                     if( get_comment_meta( $comment->comment_ID, 'qq_avatar', true ) ){
                         $qq_number =  get_comment_meta( $comment->comment_ID, 'qq_avatar', true );

@@ -30,6 +30,8 @@ function register_weixinappsettings() {
     register_setting( 'weixinapp-group', 'wf_paybody' );
 
     register_setting( 'weixinapp-group', 'wf_poster_imageurl' );
+    register_setting( 'weixinapp-group', 'wf_cdn_url' );
+    register_setting( 'weixinapp-group', 'wf_avatar_cdn_url' );
     register_setting( 'weixinapp-group', 'wf_enable_comment_option' );
        
     
@@ -116,6 +118,16 @@ if (version_compare(PHP_VERSION, '5.5.0', '<=') )
             <tr valign="top">
             <th scope="row">海报图片默认地址</th>
             <td><input type="text" name="wf_poster_imageurl" style="width:600px" value="<?php echo esc_attr( get_option('wf_poster_imageurl') ); ?>" /><br/>(请输完整的图片地址,例如:<span style="color: blue">https://www.watch-life.net/images/2017/06/winxinapp-wordpress-watch-life-new-700.jpg</span>)</td>
+            </tr>
+
+            <tr valign="top">
+            <th scope="row">CDN 默认地址</th>
+            <td><input type="text" name="wf_cdn_url" style="width:600px" value="<?php echo esc_attr( get_option('wf_cdn_url') ); ?>" /><br/>(例如:<span style="color: blue">https://cdn.yoursite.com/</span>)</td>
+            </tr>
+
+            <tr valign="top">
+            <th scope="row">头像 CDN 默认地址</th>
+            <td><input type="text" name="wf_avatar_cdn_url" style="width:600px" value="<?php echo esc_attr( get_option('wf_avatar_cdn_url') ); ?>" /><br/>(例如:<span style="color: blue">https://cdn.yoursite.com/</span>，留空则使用 CDN 默认地址)</td>
             </tr>
                    
         </table>
