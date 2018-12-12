@@ -40,6 +40,18 @@ function cdn_images_url_replace($url) {
     return $replace_url;
 }
 
+function content_format($str) {
+    $str = preg_replace('/<!-- wp:paragraph -->\s*<p>/i', '', $str);
+    $str = preg_replace('/<\/p>\s*<!-- \/wp:paragraph -->/i', '', $str);
+    $str = preg_replace('/<!-- wp:separator -->/i', '', $str);
+    $str = preg_replace('/<!-- \/wp:separator -->/i', '', $str);
+    $str = preg_replace('/<!-- wp:list -->/i', '', $str);
+    $str = preg_replace('/<!-- \/wp:list -->/i', '', $str);
+    $str = preg_replace('/<\/li>/i', "</li>\n", $str);
+    $str = preg_replace('/\n<hr \S*\/>\n/i', '<hr />', $str);
+    return $str;
+}
+
 function getPostImages($content,$postId){
     $content_first_image= get_post_content_first_image($content);
     $post_frist_image=$content_first_image;

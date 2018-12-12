@@ -2,18 +2,6 @@
 //禁止直接访问
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-function content_format($str) {
-    $str = preg_replace('/<!-- wp:paragraph -->\s*<p>/i', '', $str);
-    $str = preg_replace('/<\/p>\s*<!-- \/wp:paragraph -->/i', '', $str);
-    $str = preg_replace('/<!-- wp:separator -->/i', '', $str);
-    $str = preg_replace('/<!-- \/wp:separator -->/i', '', $str);
-    $str = preg_replace('/<!-- wp:list -->/i', '', $str);
-    $str = preg_replace('/<!-- \/wp:list -->/i', '', $str);
-    $str = preg_replace('/<\/li>/i', "</li>\n", $str);
-    $str = preg_replace('/\n<hr \S*\/>\n/i', '<hr />', $str);
-    return $str;
-}
-
 function custom_post_fields( $data, $post, $request) { 
     global $wpdb,$is_chrome;
     $_data = $data->data; 
@@ -40,9 +28,8 @@ function custom_post_fields( $data, $post, $request) {
     {
       $_data['category_name'] =$category[0]->cat_name; 
     }
-    $_content['rendered'] = $content;
-    $_content = cdn_images_url_replace($_content);
-    $_data['content'] = content_format($_content);  
+    $_content = cdn_images_url_replace($content);
+    $_data['content']['rendered'] = content_format($_content);
     $post_date =$post->post_date;
     //$_data['date'] =time_tran($post_date);
     $_data['post_date'] =time_tran($post_date);
