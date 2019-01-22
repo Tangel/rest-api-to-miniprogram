@@ -420,9 +420,9 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller{
         $openid =$request['openid']; 
 
         $qrcodeName = 'qrcode-'.$postid.'.png';//文章小程序二维码文件名     
-        // $qrcodeurl = REST_API_TO_MINIPROGRAM_PLUGIN_DIR.'qrcode/'.$qrcodeName;//文章小程序二维码路径
+        $qrcodeurl = REST_API_TO_MINIPROGRAM_PLUGIN_DIR.'qrcode/'.$qrcodeName;//文章小程序二维码路径
         // api.js - getPosterUrl() / getPosterQrcodeUrl()
-        $qrcodeurl = PLUGIN_DIR.'wp-rest-api-for-app/qrcode/'.$qrcodeName;
+        // $qrcodeurl = PLUGIN_DIR.'wp-rest-api-for-app/qrcode/'.$qrcodeName;
         
         //自定义参数区域，可自行设置      
         $appid = get_option('wf_appid');

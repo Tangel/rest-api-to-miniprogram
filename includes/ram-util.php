@@ -41,14 +41,33 @@ function cdn_images_url_replace($url) {
 }
 
 function content_format($str) {
-    $str = preg_replace('/<!-- wp:paragraph -->\s*<p>/i', '', $str);
-    $str = preg_replace('/<\/p>\s*<!-- \/wp:paragraph -->/i', '', $str);
-    $str = preg_replace('/<!-- wp:separator -->/i', '', $str);
-    $str = preg_replace('/<!-- \/wp:separator -->/i', '', $str);
-    $str = preg_replace('/<!-- wp:list -->/i', '', $str);
-    $str = preg_replace('/<!-- \/wp:list -->/i', '', $str);
-    $str = preg_replace('/<\/li>/i', "</li>\n", $str);
-    $str = preg_replace('/\n<hr \S*\/>\n/i', '<hr />', $str);
+
+    $str = preg_replace('/<!-- wp:\w+( {\S+})? -->(\s*<p>)?/i', '', $str);
+    $str = preg_replace('/(<\/p>\s*)?<!-- \/wp:\w+ -->/i', '', $str);
+
+    $str = preg_replace('/<blockquote \w*="\S+"><p>/i', '<blockquote>', $str);
+    $str = preg_replace('/<\/p><\/blockquote>/i', '</blockquote>', $str);
+
+    $str = preg_replace('/<figure \w*="\S+">/i', '', $str);
+    $str = preg_replace('/<\/figure>/i', '', $str);
+
+    $str = preg_replace('/<div class="[\s\S]+" style="\w+-\w+:url\((\S+)\)"><p class="\S+">[\s\S]+<\/p><\/div>/i', "<img src=\"$1\"/>", $str);
+
+    $str = preg_replace('/<\/li><li>/i', "</li>\n<li>", $str);
+
+    $str = preg_replace('/<ul>\s+<li>/i', '<ul><li>', $str);
+    $str = preg_replace('/<\/li>\s+<\/ul>/i', '</li></ul>', $str);
+
+    $str = preg_replace('/\n{2,}<hr(\s)?(\S*)?\/>\n{2,}/i', "\n<hr />\n", $str);
+
+    $str = preg_replace('/\n{3,}/i', "\n\n", $str);
+
+    $str = preg_replace('/\[hide( t="\S+")?\]/i', '', $str);
+    $str = preg_replace('/\[\/hide\]/i', '', $str);
+
+    $str = preg_replace('/\[caption id="\w+" align="\w+" width="\d+"\]/i', '', $str);
+    $str = preg_replace('/\[\/caption\]/i', '', $str);
+
     return $str;
 }
 
@@ -68,13 +87,13 @@ function getPostImages($content,$postId){
 
     $post_thumbnail_image_150='';
     $post_medium_image_300='';
-    $post_thumbnail_image_624=''; 
+    $post_thumbnail_image_624='';
 
     $post_thumbnail_image='';
 
     $post_medium_image="";
     $post_large_image="";
-    $post_full_image="";   
+    $post_full_image="";
 
     $_data =array();
 
