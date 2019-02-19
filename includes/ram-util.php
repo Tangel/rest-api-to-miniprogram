@@ -72,13 +72,12 @@ function content_format($str) {
 }
 
 function getPostImages($content,$postId){
-    $content_first_image= get_post_content_first_image($content);
-    $post_frist_image=$content_first_image;
+    $post_frist_image = get_post_content_first_image($content);
 
-    if(empty($content_first_image))
-    {
-        $content_first_image='';
-    }
+    // if(empty($content_first_image))
+    // {
+    //     $content_first_image='';
+    // }
 
     if(empty($post_frist_image))
     {
@@ -86,8 +85,8 @@ function getPostImages($content,$postId){
     }
 
     $post_thumbnail_image_150='';
-    $post_medium_image_300='';
-    $post_thumbnail_image_624='';
+    // $post_medium_image_300='';
+    // $post_thumbnail_image_624='';
 
     $post_thumbnail_image='';
 
@@ -104,57 +103,57 @@ function getPostImages($content,$postId){
         //特色图缩略图
         $image=wp_get_attachment_image_src($thumbnailId, 'thumbnail');
         $post_thumbnail_image=$image[0];
-        $post_thumbnail_image_150=$image[0];
+        // $post_thumbnail_image_150=$image[0];
         //特色中等图
         $image=wp_get_attachment_image_src($thumbnailId, 'medium');
         $post_medium_image=$image[0];
-        $post_medium_image_300=$image[0];
+        // $post_medium_image_300=$image[0];
         //特色大图
         $image=wp_get_attachment_image_src($thumbnailId, 'large');
         $post_large_image=$image[0];
-        $post_thumbnail_image_624=$image[0];
+        // $post_thumbnail_image_624=$image[0];
         //特色原图
         $image=wp_get_attachment_image_src($thumbnailId, 'full');
         $post_full_image=$image[0];
 
     }
 
-    if(!empty($content_first_image) && empty($post_thumbnail_image))
+    if(!empty($post_frist_image) && empty($post_thumbnail_image))
      {
-        $post_thumbnail_image=$content_first_image;
-        $post_thumbnail_image_150=$content_first_image;
+        $post_thumbnail_image=$post_frist_image;
+        // $post_thumbnail_image_150=$content_first_image;
      }
 
-     if(!empty($content_first_image) && empty($post_medium_image))
+     if(!empty($post_frist_image) && empty($post_medium_image))
      {
-        $post_medium_image=$content_first_image;
-        $post_medium_image_300=$content_first_image;
+        $post_medium_image=$post_frist_image;
+        // $post_medium_image_300=$content_first_image;
         
      }
 
-     if(!empty($content_first_image) && empty($post_large_image))
+     if(!empty($post_frist_image) && empty($post_large_image))
      {
-        $post_large_image=$content_first_image;
-        $post_thumbnail_image_624=$content_first_image;
+        $post_large_image=$post_frist_image;
+        // $post_thumbnail_image_624=$content_first_image;
      }
 
-     if(!empty($content_first_image) && empty($post_full_image))
+     if(!empty($post_frist_image) && empty($post_full_image))
      {
-        $post_full_image=$content_first_image;
+        $post_full_image=$post_frist_image;
      }
 
      //$post_all_images = get_attached_media( 'image', $postId);
-    $post_all_images = get_post_content_images($content);
+    // $post_all_images = get_post_content_images($content);
     $_data['post_frist_image'] = cdn_images_url_replace($post_frist_image);
     $_data['post_thumbnail_image'] = cdn_images_url_replace($post_thumbnail_image);
     $_data['post_medium_image'] = cdn_images_url_replace($post_medium_image);
     $_data['post_large_image'] = cdn_images_url_replace($post_large_image);
     $_data['post_full_image'] = cdn_images_url_replace($post_full_image);
-    $_data['post_all_images'] = cdn_images_url_replace($post_all_images);
-    $_data['post_thumbnail_image_150'] = cdn_images_url_replace($post_thumbnail_image_150);
-    $_data['post_medium_image_300'] = cdn_images_url_replace($post_medium_image_300);
-    $_data['post_thumbnail_image_624'] = cdn_images_url_replace($post_thumbnail_image_624);
-    $_data['content_first_image'] = cdn_images_url_replace($content_first_image);
+    // $_data['post_all_images'] = cdn_images_url_replace($post_all_images);
+    // $_data['post_thumbnail_image_150'] = cdn_images_url_replace($post_thumbnail_image_150);
+    // $_data['post_medium_image_300'] = cdn_images_url_replace($post_medium_image_300);
+    // $_data['post_thumbnail_image_624'] = cdn_images_url_replace($post_thumbnail_image_624);
+    // $_data['content_first_image'] = cdn_images_url_replace($content_first_image);
 
     return  $_data; 
            
