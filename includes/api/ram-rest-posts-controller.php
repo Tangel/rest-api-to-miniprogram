@@ -627,7 +627,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
 
     }
 
-    public function getIsLike($openid,$postid) {
+    public function getIsLike($request) {
         $openid= $request['openid'];
         $postid=$request['postid'];    
         $openid="_".$openid; 
