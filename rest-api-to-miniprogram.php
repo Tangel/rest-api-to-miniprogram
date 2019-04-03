@@ -15,6 +15,7 @@ define('REST_API_TO_MINIPROGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 // define('PLUGIN_DIR', plugin_dir_path(__DIR__));
 define('REST_API_TO_MINIPROGRAM_PLUGIN_FILE',__FILE__);
 define('BLOG_URL',str_replace(".", "\.", home_url("/")));
+const REST_API_TO_MINIPROGRAM_PLUGIN_NAME='rest-api-to-miniprogram';
 
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-util.php' );
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-api.php' );

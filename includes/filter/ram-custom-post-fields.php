@@ -26,7 +26,7 @@ function custom_post_fields( $data, $post, $request) {
     $_data['video_cover'] = $video_cover;
     $_data['video_cover_poster'] = $video_cover_poster;
     $comments_count = wp_count_comments($post_id);    
-    $_data['total_comments']=$comments_count->total_comments;
+    $_data['total_comments']=$comments_count->approved;
     $category =get_the_category($post_id);
     if(!empty($category))
     {
