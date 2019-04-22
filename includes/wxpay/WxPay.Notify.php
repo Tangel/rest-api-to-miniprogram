@@ -17,7 +17,7 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 		$msg = "OK";
 		//当返回false的时候，表示notify中调用NotifyCallBack回调失败获取签名校验失败，此时直接回复失败
 		$result = WxpayApi::notify(array($this, 'NotifyCallBack'), $msg);
-		if($result == false){
+		if ($result == false) {
 			$this->SetReturn_code("FAIL");
 			$this->SetReturn_msg($msg);
 			$this->ReplyNotify(false);
@@ -29,7 +29,7 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 		}
 		$this->ReplyNotify($needSign);
 	}
-	
+
 	/**
 	 * 
 	 * 回调方法入口，子类可重写该方法
@@ -45,7 +45,7 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 		//TODO 用户基础该类之后需要重写该方法，成功的时候返回true，失败返回false
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 * notify回调方法，该方法中需要赋值需要输出的参数,不可重写
@@ -56,8 +56,8 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 	{
 		$msg = "OK";
 		$result = $this->NotifyProcess($data, $msg);
-		
-		if($result == true){
+
+		if ($result == true) {
 			$this->SetReturn_code("SUCCESS");
 			$this->SetReturn_msg("OK");
 		} else {
@@ -66,7 +66,7 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 		}
 		return $result;
 	}
-	
+
 	/**
 	 * 
 	 * 回复通知
@@ -75,11 +75,12 @@ class RAM_WxPayNotify extends RAM_WxPayNotifyReply
 	final private function ReplyNotify($needSign = true)
 	{
 		//如果需要签名
-		if($needSign == true && 
-			$this->GetReturn_code($return_code) == "SUCCESS")
-		{
-			$this->SetSign();
-		}
+		if (
+			$needSign == true &&
+			$this->GetReturn_code($return_code) == "SUCCESS"
+		) {
+				$this->SetSign();
+			}
 		WxpayApi::replyNotify($this->ToXml());
 	}
 }

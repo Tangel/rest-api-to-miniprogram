@@ -1,5 +1,5 @@
 <?php
-require_once( REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/wxpay/WxPay.Api.php' );
+require_once(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/wxpay/WxPay.Api.php');
 
 /**
  * 
@@ -30,7 +30,7 @@ class RAM_JsApiPay
 	 * @var array
 	 */
 	public $data = null;
-	
+
 	/**
 	 * 
 	 * 通过跳转获取用户的openid，跳转流程如下：
@@ -42,20 +42,20 @@ class RAM_JsApiPay
 	public function GetOpenid()
 	{
 		//通过code获得openid
-		if (!isset($_GET['code'])){
+		if (!isset($_GET['code'])) {
 			//触发微信返回code码
-			$baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
+			$baseUrl = urlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING']);
 			$url = $this->__CreateOauthUrlForCode($baseUrl);
 			Header("Location: $url");
 			exit();
 		} else {
 			//获取code码，以获取openid
-		    $code = $_GET['code'];
+			$code = $_GET['code'];
 			$openid = $this->getOpenidFromMp($code);
 			return $openid;
 		}
 	}
-	
+
 	/**
 	 * 
 	 * 获取jsapi支付的参数
@@ -66,12 +66,13 @@ class RAM_JsApiPay
 	 */
 	public function GetJsApiParameters($UnifiedOrderResult)
 	{
-		if(!array_key_exists("appid", $UnifiedOrderResult)
-		|| !array_key_exists("prepay_id", $UnifiedOrderResult)
-		|| $UnifiedOrderResult['prepay_id'] == "")
-		{
-			throw new RAM_WxPayException("参数错误");
-		}
+		if (
+			!array_key_exists("appid", $UnifiedOrderResult)
+			|| !array_key_exists("prepay_id", $UnifiedOrderResult)
+			|| $UnifiedOrderResult['prepay_id'] == ""
+		) {
+				throw new RAM_WxPayException("参数错误");
+			}
 		$jsapi = new RAM_WxPayJsApiPay();
 		$jsapi->SetAppid($UnifiedOrderResult["appid"]);
 		$timeStamp = time();
@@ -84,7 +85,7 @@ class RAM_JsApiPay
 		$parameters = $jsapi->GetValues(); //xjb 修改为返回数组
 		return $parameters;
 	}
-	
+
 	/**
 	 * 
 	 * 通过code从工作平台获取openid机器access_token
@@ -98,31 +99,33 @@ class RAM_JsApiPay
 		//初始化curl
 		$ch = curl_init();
 		$curlVersion = curl_version();
-		$ua = "WXPaySDK/0.0.5 (".PHP_OS.") PHP/".PHP_VERSION." CURL/".$curlVersion['version']." ".RAM_WxPayConfig::MCHID;
+		$ua = "WXPaySDK/0.0.5 (" . PHP_OS . ") PHP/" . PHP_VERSION . " CURL/" . $curlVersion['version'] . " " . RAM_WxPayConfig::MCHID;
 
 		//设置超时
 		curl_setopt($ch, CURLOPT_TIMEOUT, $this->curl_timeout);
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,FALSE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
-		curl_setopt($ch,CURLOPT_USERAGENT, $ua);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+		curl_setopt($ch, CURLOPT_USERAGENT, $ua);
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		if(RAM_WxPayConfig::CURL_PROXY_HOST != "0.0.0.0" 
-			&& RAM_WxPayConfig::CURL_PROXY_PORT != 0){
-			curl_setopt($ch,CURLOPT_PROXY, RAM_WxPayConfig::CURL_PROXY_HOST);
-			curl_setopt($ch,CURLOPT_PROXYPORT, RAM_WxPayConfig::CURL_PROXY_PORT);
+		if (
+			RAM_WxPayConfig::CURL_PROXY_HOST != "0.0.0.0"
+			&& RAM_WxPayConfig::CURL_PROXY_PORT != 0
+		) {
+			curl_setopt($ch, CURLOPT_PROXY, RAM_WxPayConfig::CURL_PROXY_HOST);
+			curl_setopt($ch, CURLOPT_PROXYPORT, RAM_WxPayConfig::CURL_PROXY_PORT);
 		}
 		//运行curl，结果以jason形式返回
 		$res = curl_exec($ch);
 		curl_close($ch);
 		//取出openid
-		$data = json_decode($res,true);
+		$data = json_decode($res, true);
 		$this->data = $data;
 		$openid = $data['openid'];
 		return $openid;
 	}
-	
+
 	/**
 	 * 
 	 * 拼接签名字符串
@@ -133,17 +136,16 @@ class RAM_JsApiPay
 	private function ToUrlParams($urlObj)
 	{
 		$buff = "";
-		foreach ($urlObj as $k => $v)
-		{
-			if($k != "sign"){
-				$buff .= $k . "=" . $v . "&";
+		foreach ($urlObj as $k => $v) {
+				if ($k != "sign") {
+					$buff .= $k . "=" . $v . "&";
+				}
 			}
-		}
-		
+
 		$buff = trim($buff, "&");
 		return $buff;
 	}
-	
+
 	/**
 	 * 
 	 * 获取地址js参数
@@ -151,11 +153,11 @@ class RAM_JsApiPay
 	 * @return 获取共享收货地址js函数需要的参数，json格式可以直接做参数使用
 	 */
 	public function GetEditAddressParameters()
-	{	
+	{
 		$getData = $this->data;
 		$data = array();
 		$data["appid"] = RAM_WxPayConfig::APPID;
-		$data["url"] = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$data["url"] = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		$time = time();
 		$data["timestamp"] = "$time";
 		$data["noncestr"] = "1234568";
@@ -163,7 +165,7 @@ class RAM_JsApiPay
 		ksort($data);
 		$params = $this->ToUrlParams($data);
 		$addrSign = sha1($params);
-		
+
 		$afterData = array(
 			"addrSign" => $addrSign,
 			"signType" => "sha1",
@@ -175,7 +177,7 @@ class RAM_JsApiPay
 		$parameters = json_encode($afterData);
 		return $parameters;
 	}
-	
+
 	/**
 	 * 
 	 * 构造获取code的url连接
@@ -189,11 +191,11 @@ class RAM_JsApiPay
 		$urlObj["redirect_uri"] = "$redirectUrl";
 		$urlObj["response_type"] = "code";
 		$urlObj["scope"] = "snsapi_base";
-		$urlObj["state"] = "STATE"."#wechat_redirect";
+		$urlObj["state"] = "STATE" . "#wechat_redirect";
 		$bizString = $this->ToUrlParams($urlObj);
-		return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
+		return "https://open.weixin.qq.com/connect/oauth2/authorize?" . $bizString;
 	}
-	
+
 	/**
 	 * 
 	 * 构造获取open和access_toke的url地址
@@ -208,6 +210,6 @@ class RAM_JsApiPay
 		$urlObj["code"] = $code;
 		$urlObj["grant_type"] = "authorization_code";
 		$bizString = $this->ToUrlParams($urlObj);
-		return "https://api.weixin.qq.com/sns/oauth2/access_token?".$bizString;
+		return "https://api.weixin.qq.com/sns/oauth2/access_token?" . $bizString;
 	}
 }

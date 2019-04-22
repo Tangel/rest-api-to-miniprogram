@@ -1,7 +1,7 @@
 <?php
 /**
-* 	配置账号信息
-*/
+ * 	配置账号信息
+ */
 
 class RAM_WxPayConfig
 {
@@ -26,7 +26,7 @@ class RAM_WxPayConfig
 	// const MCHID = '1900009851';
 	// const KEY = '8934e7d15453e97507ef794cf7b0519d';
 	// const APPSECRET = '7813490da6f1265e4901ffb80afaa36f';
-	
+
 	//=======【证书路径设置】=====================================
 	/**
 	 * TODO：设置商户证书路径
@@ -40,7 +40,7 @@ class RAM_WxPayConfig
 	 */
 	// const SSLCERT_PATH = '/data/cert/apiclient_cert.pem';
 	// const SSLKEY_PATH = '/data/cert/apiclient_key.pem';
-	
+
 	//=======【curl代理设置】===================================
 	/**
 	 * TODO：这里设置代理机器，只有需要代理的时候才设置，不需要代理，请设置为0.0.0.0和0
@@ -50,7 +50,7 @@ class RAM_WxPayConfig
 	 */
 	const CURL_PROXY_HOST = "0.0.0.0";
 	const CURL_PROXY_PORT = 0;
-	
+
 	//=======【上报信息配置】===================================
 	/**
 	 * TODO：接口调用上报等级，默认紧错误上报（注意：上报超时间为【1s】，上报无论成败【永不抛出异常】，
@@ -61,22 +61,26 @@ class RAM_WxPayConfig
 	 */
 	const REPORT_LEVENL = 1;
 
-	public static function get_appid(){
-		$appId = get_option( 'wf_appid' );
+	public static function get_appid()
+	{
+		$appId = get_option('wf_appid');
 		return $appId;
 	}
-	
-	public static function get_mchid(){
+
+	public static function get_mchid()
+	{
 		$mchId = get_option('wf_mchid');
 		return $mchId;
 	}
-	
-	public static function get_key(){
+
+	public static function get_key()
+	{
 		$key = get_option('wf_paykey');
 		return $key;
 	}
 
-	public static function get_body(){
+	public static function get_body()
+	{
 		$body = get_option('wf_paybody');
 		return $body;
 	}

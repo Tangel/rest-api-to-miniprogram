@@ -1,20 +1,9 @@
 <?php
 //解析腾讯视频，只支持一个腾讯视频
-function custocm_content_filter($content) {
+function custocm_content_filter($content)
+{
 
-    $_content=$content;
-    if(is_single() || is_home()|| is_feed())
-    {
-        $vcontent =get_post_qq_video($content);
-        if(!empty($vcontent))
-        {
-            $_content=$vcontent;
-        }
-    }
+    $_content = $content;
 
     return $_content;
-
 }
-
-
-

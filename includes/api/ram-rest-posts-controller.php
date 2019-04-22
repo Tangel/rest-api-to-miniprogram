@@ -1,90 +1,93 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit;
 }
 
-class RAM_REST_Posts_Controller  extends WP_REST_Controller{
+class RAM_REST_Posts_Controller  extends WP_REST_Controller
+{
 
-    public function __construct() {
-        
+    public function __construct()
+    {
+
         $this->namespace     = 'watch-life-net/v1';
         $this->resource_name = 'post';
     }
 
     // Register our routes.
-    public function register_routes() {
-        register_rest_route( $this->namespace, '/' . $this->resource_name.'/swipe', array(
+    public function register_routes()
+    {
+        register_rest_route($this->namespace, '/' . $this->resource_name . '/swipe', array(
             // Here we register the readable endpoint for collections.
             array(
                 'methods'   => 'GET',
-                'callback'  => array( $this, 'getPostSwipe' ),
-                'permission_callback' => array( $this, 'get_item_permissions_check' )
-                 
+                'callback'  => array($this, 'getPostSwipe'),
+                'permission_callback' => array($this, 'get_item_permissions_check')
+
             ),
             // Register our schema callback.
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
+            'schema' => array($this, 'get_public_item_schema'),
+        ));
 
-        register_rest_route( $this->namespace, '/' . $this->resource_name.'/like', array(
+        register_rest_route($this->namespace, '/' . $this->resource_name . '/like', array(
             // Here we register the readable endpoint for collections.
             array(
                 'methods'   => 'POST',
-                'callback'  => array( $this, 'postLike' ),
-                'permission_callback' => array( $this, 'post_like_permissions_check' ),
-                'args'               => array(              
+                'callback'  => array($this, 'postLike'),
+                'permission_callback' => array($this, 'post_like_permissions_check'),
+                'args'               => array(
                     'postid' => array(
                         'required' => true
-                    ),                    
+                    ),
                     'openid' => array(
                         'required' => true
                     )
-                   
+
                 )
-                 
+
             ),
             // Register our schema callback.
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
+            'schema' => array($this, 'get_public_item_schema'),
+        ));
 
-        register_rest_route( $this->namespace, '/' . $this->resource_name.'/islike', array(
+        register_rest_route($this->namespace, '/' . $this->resource_name . '/islike', array(
             // Here we register the readable endpoint for collections.
             array(
                 'methods'   => 'POST',
-                'callback'  => array( $this, 'getIsLike' ),
-                'permission_callback' => array( $this, 'post_like_permissions_check' ),
-                'args'               => array(              
+                'callback'  => array($this, 'getIsLike'),
+                'permission_callback' => array($this, 'post_like_permissions_check'),
+                'args'               => array(
                     'postid' => array(
                         'required' => true
-                    ),                    
+                    ),
                     'openid' => array(
                         'required' => true
                     )
-                   
+
                 )
-                 
+
             ),
             // Register our schema callback.
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) ); 
+            'schema' => array($this, 'get_public_item_schema'),
+        ));
 
-        register_rest_route( $this->namespace, '/' . $this->resource_name.'/mylike', array(
+        register_rest_route($this->namespace, '/' . $this->resource_name . '/mylike', array(
             // Here we register the readable endpoint for collections.
             array(
                 'methods'   => 'GET',
-                'callback'  => array( $this, 'getmyLike' ),
-                'permission_callback' => array( $this, 'get_mylike_permissions_check' ),
-                'args'               => array( 
+                'callback'  => array($this, 'getmyLike'),
+                'permission_callback' => array($this, 'get_mylike_permissions_check'),
+                'args'               => array(
                     'openid' => array(
                         'required' => true
                     )
-                   
+
                 )
-                 
+
             ),
             // Register our schema callback.
-            'schema' => array( $this, 'get_public_item_schema' ),
-        ) );
+            'schema' => array($this, 'get_public_item_schema'),
+        ));
         /*
         register_rest_route( $this->namespace, '/' . $this->resource_name.'/hotpostthisyear', array(
             array(
@@ -191,7 +194,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
             // Register our schema callback.
             'schema' => array( $this, 'get_public_item_schema' ),
         ) );
-        */                  
+        */
     }
     /*
     function getallpraise ($request)
@@ -530,81 +533,74 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
 
     }
     */
-    function getPostSwipe($request) {    
-    
+    function getPostSwipe($request)
+    {
+
         global $wpdb;
         $postSwipeIDs = get_option('wf_swipe');
-        $posts =array();                  
-        if(!empty($postSwipeIDs))
-        {
-            $sql="SELECT *  from ".$wpdb->posts." where id in(".$postSwipeIDs.")";
-            $_posts = $wpdb->get_results($sql);
-            
-            foreach ($_posts as $post) {    
-                $post_id = (int) $post->ID;
-                $post_title = stripslashes($post->post_title);                
-                $post_date =$post->post_date;
-                $post_permalink = get_permalink($post->ID);            
-                $_data["id"]  =$post_id;
-                $_data["post_title"] =$post_title;
-                $_data["post_date"] =$post_date; 
-                $_data["post_permalink"] =$post_permalink;
-                $_data['type']="detailpage";  
-                
-                $pageviews = (int) get_post_meta( $post_id, 'views',true);
-                $_data['pageviews'] = $pageviews;
+        $posts = array();
+        if (!empty($postSwipeIDs)) {
+                $sql = "SELECT *  from " . $wpdb->posts . " where id in(" . $postSwipeIDs . ")";
+                $_posts = $wpdb->get_results($sql);
 
-                $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->comments." where  comment_approved = '1' and comment_post_ID=".$post_id);
-                $_data['comment_total']= $comment_total;
+                foreach ($_posts as $post) {
+                    $post_id = (int)$post->ID;
+                    $post_title = stripslashes($post->post_title);
+                    $post_date = $post->post_date;
+                    $post_permalink = get_permalink($post->ID);
+                    $_data["id"]  = $post_id;
+                    $_data["post_title"] = $post_title;
+                    $_data["post_date"] = $post_date;
+                    $_data["post_permalink"] = $post_permalink;
+                    $_data['type'] = "detailpage";
 
-                $images =getPostImages($post->post_content,$post_id);         
-                
-                $_data['post_thumbnail_image']=$images['post_thumbnail_image'];
-                // $_data['content_first_image']=$images['content_first_image'];
-                // $_data['post_medium_image_300']=$images['post_medium_image_300'];
-                // $_data['post_thumbnail_image_624']=$images['post_thumbnail_image_624'];
+                    $pageviews = (int)get_post_meta($post_id, 'views', true);
+                    $_data['pageviews'] = $pageviews;
 
-                $_data['post_frist_image']=$images['post_frist_image'];
-                $_data['post_medium_image']=$images['post_medium_image'];
-                $_data['post_large_image']=$images['post_large_image'];
-                $_data['post_full_image']=$images['post_full_image'];
-                // $_data['post_all_images']=$images['post_all_images'];
-                $posts[] = $_data;               
+                    $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->comments . " where  comment_approved = '1' and comment_post_ID=" . $post_id);
+                    $_data['comment_total'] = $comment_total;
+
+                    $images = getPostImages($post->post_content, $post_id);
+
+                    $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
+                    // $_data['content_first_image']=$images['content_first_image'];
+                    // $_data['post_medium_image_300']=$images['post_medium_image_300'];
+                    // $_data['post_thumbnail_image_624']=$images['post_thumbnail_image_624'];
+
+                    $_data['post_frist_image'] = $images['post_frist_image'];
+                    $_data['post_medium_image'] = $images['post_medium_image'];
+                    $_data['post_large_image'] = $images['post_large_image'];
+                    $_data['post_full_image'] = $images['post_full_image'];
+                    // $_data['post_all_images']=$images['post_all_images'];
+                    $posts[] = $_data;
+                }
+
+                $result["code"] = "success";
+                $result["message"] = "获取轮播图成功";
+                $result["status"] = "200";
+                $result["posts"] = $posts;
+            } else {
+                return new WP_Error('error', '没有设置轮播图的文章id', array('status' => "500"));
             }
 
-            $result["code"]="success";
-            $result["message"]= "获取轮播图成功";
-            $result["status"]="200";
-            $result["posts"]=$posts; 
-        
-        }
-        else
-        {
-            return new WP_Error( 'error', '没有设置轮播图的文章id' , array( 'status' => "500" ) );
-                             
-            
-        }
-
-        $response = rest_ensure_response( $result);
-        return $response;   
-    
-
+        $response = rest_ensure_response($result);
+        return $response;
     }
 
     public function getmyLike($request)
     {
         global $wpdb;
-        $openid= $request['openid'];
-        $sql ="SELECT * from ".$wpdb->posts."  where ID in  
-(SELECT post_id from ".$wpdb->postmeta." where meta_value='like' and meta_key='_".$openid."') ORDER BY post_date desc LIMIT 20";        
+        $openid = $request['openid'];
+        $sql = "SELECT * from " . $wpdb->posts . "  where ID in  
+(SELECT post_id from " . $wpdb->postmeta . " where meta_value='like' and meta_key='_" . $openid . "') ORDER BY post_date desc LIMIT 20";
         $_posts = $wpdb->get_results($sql);
-        $posts =array();
+        $posts = array();
         foreach ($_posts as $post) {
             $post_id = $post->ID;
             $post_date = $post->post_date;
-            $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->comments." where  comment_approved = '1' and comment_post_ID=".$post_id);
-            $like_count = $wpdb->get_var("SELECT COUNT(1) FROM ".$wpdb->postmeta." where meta_value='like' and post_id=".$post_id);
-            $images = getPostImages($post->post_content,$post_id);
+            $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->comments . " where  comment_approved = '1' and comment_post_ID=" . $post_id);
+            $like_count = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->postmeta . " where meta_value='like' and post_id=" . $post_id);
+            $images = getPostImages($post->post_content, $post_id);
             $_data["post_id"] = $post_id;
             $_data["post_title"] = $post->post_title;
             $_data["post_date"] = $post_date;
@@ -619,134 +615,101 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
             $_data['post_large_image'] = $images['post_large_image'];
             $_data['post_full_image'] = $images['post_full_image'];
             // $_data['post_all_images'] = $images['post_all_images'];
-            $posts[]=$_data;
+            $posts[] = $_data;
         }
 
-        $result["code"]="success";
-        $result["message"]= "获取我点赞的文章成功";
-        $result["status"]="200";
-        $result["data"]=$posts; 
+        $result["code"] = "success";
+        $result["message"] = "获取我点赞的文章成功";
+        $result["status"] = "200";
+        $result["data"] = $posts;
 
-        $response = rest_ensure_response( $result);
-        return $response;         
-
+        $response = rest_ensure_response($result);
+        return $response;
     }
 
-    public function getIsLike($request) {
-        $openid= $request['openid'];
-        $postid=$request['postid'];    
-        $openid="_".$openid; 
-        $postmeta = get_post_meta($postid, $openid,true);
-        if (!empty($postmeta))
-        {
-            
-                $result["code"]="success";
-                $result["message"]= "you have  posted like ";
-                $result["status"]="200";                   
-                
-            
-            
-        }
-        else
-        {
-                $result["code"]="success";
-                $result["message"]= "you have not  posted like ";
-                $result["status"]="501";                   
-                
-            
-        }
+    public function getIsLike($request)
+    {
+        $openid = $request['openid'];
+        $postid = $request['postid'];
+        $openid = "_" . $openid;
+        $postmeta = get_post_meta($postid, $openid, true);
+        if (!empty($postmeta)) {
 
-        $response = rest_ensure_response( $result);
-        return $response;  
+                $result["code"] = "success";
+                $result["message"] = "you have  posted like ";
+                $result["status"] = "200";
+            } else {
+                $result["code"] = "success";
+                $result["message"] = "you have not  posted like ";
+                $result["status"] = "501";
+            }
 
-    
+        $response = rest_ensure_response($result);
+        return $response;
     }
 
     public function postLike($request)
     {
-        $openid= $request['openid'];
-        $openid="_".$openid;
-        $postid=$request['postid'];
-        $postmeta = get_post_meta($postid, $openid,true);
-        if (empty($postmeta))
-        {
-            
-            if(add_post_meta($postid, $openid,'like', true))
-            {
-                $result["code"]="success";
-                $result["message"]= "点赞成功 ";
-                $result["status"]="200";    
-                
-            
-            }
-            else
-            {
-                return new WP_Error( 'error', '点赞失败' , array( 'status' => "500" ) );
-            }            
-            
-            
-        }
-        else
-        {
-                $result["code"]="success";
-                $result["message"]= "已点赞 ";
-                $result["status"]="501";                   
-                
-            
-        }
+        $openid = $request['openid'];
+        $openid = "_" . $openid;
+        $postid = $request['postid'];
+        $postmeta = get_post_meta($postid, $openid, true);
+        if (empty($postmeta)) {
 
-        $response = rest_ensure_response( $result);
+                if (add_post_meta($postid, $openid, 'like', true)) {
+                        $result["code"] = "success";
+                        $result["message"] = "点赞成功 ";
+                        $result["status"] = "200";
+                    } else {
+                        return new WP_Error('error', '点赞失败', array('status' => "500"));
+                    }
+            } else {
+                $result["code"] = "success";
+                $result["message"] = "已点赞 ";
+                $result["status"] = "501";
+            }
+
+        $response = rest_ensure_response($result);
         return $response;
     }
 
 
-    public function post_like_permissions_check($request ){
-      
-
-        $openid= $request['openid'];
-        $postid=$request['postid'];
-
-        if(empty($openid) || empty($postid) )
-        {
-            return new WP_Error( 'error', '参数错误', array( 'status' => 400 ) );
-        }               
-        else
-        { 
-            if(!username_exists($openid))
-            {
-                return new WP_Error( 'error', '不允许提交', array( 'status' => 400 ) );
-            }
-             if(is_wp_error(get_post($postid)))
-            {
-                 return new WP_Error( 'error', 'postId参数错误', array( 'status' => 400 ) );
-            }
-        }
-
-        return true;
-        
-        
-    }
-    public function get_mylike_permissions_check ($request)
+    public function post_like_permissions_check($request)
     {
-        $openid= $request['openid']; 
-        if(empty($openid))
-        {
-            return new WP_Error( 'error', 'openid is empty', array( 'status' => 500 ) );
-        }
-        
-        else
-        { 
-            if(!username_exists($openid))
-            {
-                return new WP_Error( 'error', '不允许提交', array( 'status' => 500 ) );
-            }  
-        
-        }
+
+
+        $openid = $request['openid'];
+        $postid = $request['postid'];
+
+        if (empty($openid) || empty($postid)) {
+                return new WP_Error('error', '参数错误', array('status' => 400));
+            } else {
+                if (!username_exists($openid)) {
+                        return new WP_Error('error', '不允许提交', array('status' => 400));
+                    }
+                if (is_wp_error(get_post($postid))) {
+                        return new WP_Error('error', 'postId参数错误', array('status' => 400));
+                    }
+            }
 
         return true;
     }
-    public function get_item_permissions_check($request ) {      
-        
+    public function get_mylike_permissions_check($request)
+    {
+        $openid = $request['openid'];
+        if (empty($openid)) {
+                return new WP_Error('error', 'openid is empty', array('status' => 500));
+            } else {
+                if (!username_exists($openid)) {
+                        return new WP_Error('error', '不允许提交', array('status' => 500));
+                    }
+            }
+
+        return true;
+    }
+    public function get_item_permissions_check($request)
+    {
+
         return true;
     }
 
@@ -806,7 +769,4 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller{
 
     }
     */
-
-   
-  
 }
