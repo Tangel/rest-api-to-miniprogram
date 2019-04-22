@@ -384,8 +384,8 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             }
 
 
-        if (!empty($fromId) && strlen($fromId > 50)) {
-                return new WP_Error('error', 'fromId参数错误', array('status' => 400));
+        if (!empty($formId) && strlen($formId > 50)) {
+                return new WP_Error('error', 'formId参数错误', array('status' => 400));
             }
 
         if (!username_exists($openid)) {
