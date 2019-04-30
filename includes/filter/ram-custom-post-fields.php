@@ -7,16 +7,19 @@ function custom_post_fields($data, $post, $request)
   global $wpdb, $is_chrome;
   $_data = $data->data;
   $post_id = $post->ID;
-
   $content = get_the_content();
   // $content_protected=$_data['content']['protected'];
   // $raw = empty($_data['content']['raw']) ? '' : $_data['content']['raw'];
-
   $siteurl = get_option('siteurl');
   $upload_dir = wp_upload_dir();
   $content = str_replace('http:' . strstr($siteurl, '//'), 'https:' . strstr($siteurl, '//'), $content);
   $content = str_replace('http:' . strstr($upload_dir['baseurl'], '//'), 'https:' . strstr($upload_dir['baseurl'], '//'), $content);
-
+  $_content = cdn_images_url_replace($content);
+  // $_content['raw'] = $raw;//古腾堡编辑器需要该属性，否则报错
+  // $_content['protected'] =$content_protected;
+  $_data['content']['rendered'] = content_format($_content);
+  $postImageUrl = get_option("wf_poster_imageurl");
+  $_data['postImageUrl'] = empty($postImageUrl) ? '' : $postImageUrl;
   $images = getPostImages($content, $post_id);
   $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
   // $_data['content_first_image']=$images['content_first_image'];
@@ -46,12 +49,6 @@ function custom_post_fields($data, $post, $request)
   $post_views = (int)get_post_meta($post_id, 'views', true);
   $params = $request->get_params();
   if (isset($params['id'])) {
-    $_content = cdn_images_url_replace($content);
-    // $_content['raw'] = $raw;//古腾堡编辑器需要该属性，否则报错
-    // $_content['protected'] =$content_protected;
-    $_data['content']['rendered'] = content_format($_content);
-    $postImageUrl = get_option("wf_poster_imageurl");
-    $_data['postImageUrl'] = empty($postImageUrl) ? '' : $postImageUrl;
     $sql = $wpdb->prepare("SELECT meta_key , (SELECT id from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as id ,(SELECT display_name from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as display_name  FROM " . $wpdb->postmeta . " where meta_value='like' and post_id=%d", $post_id);
     $likes = $wpdb->get_results($sql);
     // $_data['sql'] = $sql;
