@@ -9,8 +9,8 @@ function custom_post_fields($data, $post, $request)
   $post_id = $post->ID;
 
   $content = get_the_content();
-  $content_protected=$_data['content']['protected'];
-  $raw=empty($_data['content']['raw'])?'':$_data['content']['raw'];
+  // $content_protected=$_data['content']['protected'];
+  // $raw = empty($_data['content']['raw']) ? '' : $_data['content']['raw'];
 
   $siteurl = get_option('siteurl');
   $upload_dir = wp_upload_dir();
@@ -36,7 +36,7 @@ function custom_post_fields($data, $post, $request)
   $category = get_the_category($post_id);
   if (!empty($category)) {
       $_data['category_name'] = $category[0]->cat_name;
-    }
+  }
   $post_date = $post->post_date;
   //$_data['date'] =time_tran($post_date);
   $_data['post_date'] = time_tran($post_date);
@@ -47,11 +47,11 @@ function custom_post_fields($data, $post, $request)
   $params = $request->get_params();
   if (isset($params['id'])) {
     $_content = cdn_images_url_replace($content);
-    $_content['raw'] =$raw;//古腾堡编辑器需要该属性，否则报错
-    $_content['protected'] =$content_protected;
+    // $_content['raw'] = $raw;//古腾堡编辑器需要该属性，否则报错
+    // $_content['protected'] =$content_protected;
     $_data['content']['rendered'] = content_format($_content);
-    $postImageUrl=get_option("wf_poster_imageurl");
-    $_data['postImageUrl']= $postImageUrl;
+    $postImageUrl = get_option("wf_poster_imageurl");
+    $_data['postImageUrl'] = empty($postImageUrl) ? '' : $postImageUrl;
     $sql = $wpdb->prepare("SELECT meta_key , (SELECT id from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as id ,(SELECT display_name from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as display_name  FROM " . $wpdb->postmeta . " where meta_value='like' and post_id=%d", $post_id);
     $likes = $wpdb->get_results($sql);
     // $_data['sql'] = $sql;
