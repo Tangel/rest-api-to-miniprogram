@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Plugin Name: REST API TO MiniProgram
 Plugin URI: http://www.watch-life.net
@@ -99,7 +99,7 @@ if (!class_exists('RestAPIMiniProgram')) {
         $settings_link = '<a href="admin.php?page=weixinapp_slug">' . esc_html__('设置', 'REST API TO MiniProgram') . '</a>';
 
         array_unshift($links, $settings_link);
-
+        
         return $links;
     }
 }
