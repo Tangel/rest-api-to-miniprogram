@@ -383,11 +383,16 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             }
         }
 
+        // if(!empty($formId) && strlen($formId>50))
+        // {
+        //     return new WP_Error( 'error', 'fromId参数错误', array( 'status' => 500 ) );
+        // }
+
         if (!username_exists($openid)) {
-                return new WP_Error('error', '不允许提交', array('status' => 500));
-            } else if (is_wp_error(get_post($post))) {
-                return new WP_Error('error', 'postId 参数错误', array('status' => 500));
-            }
+            return new WP_Error('error', '不允许提交', array('status' => 500));
+        } else if (is_wp_error(get_post($post))) {
+            return new WP_Error('error', 'postId 参数错误', array('status' => 500));
+        }
 
         return  true;
     }

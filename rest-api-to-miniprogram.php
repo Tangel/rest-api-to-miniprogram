@@ -1,13 +1,13 @@
-<?php
+﻿<?php
 /*
 Plugin Name: REST API TO MiniProgram
 Plugin URI: http://www.watch-life.net
 Description: 为微信小程序、app提供定制WordPress REST API 输出.支持微信支付、微信小程序模板消息.
-Version: 1.5.3
+Version: 1.5.6
 Author: jianbo
 Author URI: http://www.minapper.com
 License: GPL v3
-WordPress requires at least: 4.7.0
+WordPress requires at least: 4.7.1
 */
 
 
@@ -54,7 +54,7 @@ if (!class_exists('RestAPIMiniProgram')) {
             //add_filter('raw_post_views', 'post_views');
 
 
-            // 管理配置 
+            // 管理配置
             if (is_admin()) {
 
                 //new WP_Category_Config();
@@ -99,7 +99,7 @@ if (!class_exists('RestAPIMiniProgram')) {
         $settings_link = '<a href="admin.php?page=weixinapp_slug">' . esc_html__('设置', 'REST API TO MiniProgram') . '</a>';
 
         array_unshift($links, $settings_link);
-        
+
         return $links;
     }
 }
