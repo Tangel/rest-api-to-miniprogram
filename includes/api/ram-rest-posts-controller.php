@@ -540,48 +540,48 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         $postSwipeIDs = get_option('wf_swipe');
         $posts = array();
         if (!empty($postSwipeIDs)) {
-                $sql = "SELECT *  from " . $wpdb->posts . " where id in(" . $postSwipeIDs . ")";
-                $_posts = $wpdb->get_results($sql);
+            $sql = "SELECT *  from " . $wpdb->posts . " where id in(" . $postSwipeIDs . ")";
+            $_posts = $wpdb->get_results($sql);
 
-                foreach ($_posts as $post) {
-                    $post_id = (int)$post->ID;
-                    $post_title = stripslashes($post->post_title);
-                    $post_date = $post->post_date;
-                    $post_permalink = get_permalink($post->ID);
-                    $_data["id"]  = $post_id;
-                    $_data["post_title"] = $post_title;
-                    $_data["post_date"] = $post_date;
-                    $_data["post_permalink"] = $post_permalink;
-                    $_data['type'] = "detailpage";
+            foreach ($_posts as $post) {
+                $post_id = (int)$post->ID;
+                $post_title = stripslashes($post->post_title);
+                $post_date = $post->post_date;
+                $post_permalink = get_permalink($post->ID);
+                $_data["id"]  = $post_id;
+                $_data["post_title"] = $post_title;
+                $_data["post_date"] = $post_date;
+                $_data["post_permalink"] = $post_permalink;
+                $_data['type'] = "detailpage";
 
-                    $pageviews = (int)get_post_meta($post_id, 'views', true);
-                    $_data['pageviews'] = $pageviews;
+                $pageviews = (int)get_post_meta($post_id, 'views', true);
+                $_data['pageviews'] = $pageviews;
 
-                    $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->comments . " where  comment_approved = '1' and comment_post_ID=" . $post_id);
-                    $_data['comment_total'] = $comment_total;
+                $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->comments . " where  comment_approved = '1' and comment_post_ID=" . $post_id);
+                $_data['comment_total'] = $comment_total;
 
-                    $images = getPostImages($post->post_content, $post_id);
+                $images = getPostImages($post->post_content, $post_id);
 
-                    $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
-                    // $_data['content_first_image']=$images['content_first_image'];
-                    // $_data['post_medium_image_300']=$images['post_medium_image_300'];
-                    // $_data['post_thumbnail_image_624']=$images['post_thumbnail_image_624'];
+                $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
+                // $_data['content_first_image']=$images['content_first_image'];
+                // $_data['post_medium_image_300']=$images['post_medium_image_300'];
+                // $_data['post_thumbnail_image_624']=$images['post_thumbnail_image_624'];
 
-                    $_data['post_frist_image'] = $images['post_frist_image'];
-                    $_data['post_medium_image'] = $images['post_medium_image'];
-                    $_data['post_large_image'] = $images['post_large_image'];
-                    $_data['post_full_image'] = $images['post_full_image'];
-                    // $_data['post_all_images']=$images['post_all_images'];
-                    $posts[] = $_data;
-                }
-
-                $result["code"] = "success";
-                $result["message"] = "获取轮播图成功";
-                $result["status"] = "200";
-                $result["posts"] = $posts;
-            } else {
-                return new WP_Error('error', '没有设置轮播图的文章id', array('status' => "500"));
+                $_data['post_frist_image'] = $images['post_frist_image'];
+                $_data['post_medium_image'] = $images['post_medium_image'];
+                $_data['post_large_image'] = $images['post_large_image'];
+                $_data['post_full_image'] = $images['post_full_image'];
+                // $_data['post_all_images']=$images['post_all_images'];
+                $posts[] = $_data;
             }
+
+            $result["code"] = "success";
+            $result["message"] = "获取轮播图成功";
+            $result["status"] = "200";
+            $result["posts"] = $posts;
+        } else {
+            return new WP_Error('error', '没有设置轮播图的文章id', array('status' => "500"));
+        }
 
         $response = rest_ensure_response($result);
         return $response;
@@ -635,14 +635,14 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         $postmeta = get_post_meta($postid, $openid, true);
         if (!empty($postmeta)) {
 
-                $result["code"] = "success";
-                $result["message"] = "you have  posted like ";
-                $result["status"] = "200";
-            } else {
-                $result["code"] = "success";
-                $result["message"] = "you have not  posted like ";
-                $result["status"] = "501";
-            }
+            $result["code"] = "success";
+            $result["message"] = "you have  posted like ";
+            $result["status"] = "200";
+        } else {
+            $result["code"] = "success";
+            $result["message"] = "you have not  posted like ";
+            $result["status"] = "501";
+        }
 
         $response = rest_ensure_response($result);
         return $response;
@@ -656,18 +656,18 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         $postmeta = get_post_meta($postid, $openid, true);
         if (empty($postmeta)) {
 
-                if (add_post_meta($postid, $openid, 'like', true)) {
-                        $result["code"] = "success";
-                        $result["message"] = "点赞成功 ";
-                        $result["status"] = "200";
-                    } else {
-                        return new WP_Error('error', '点赞失败', array('status' => "500"));
-                    }
-            } else {
+            if (add_post_meta($postid, $openid, 'like', true)) {
                 $result["code"] = "success";
-                $result["message"] = "已点赞 ";
-                $result["status"] = "501";
+                $result["message"] = "点赞成功 ";
+                $result["status"] = "200";
+            } else {
+                return new WP_Error('error', '点赞失败', array('status' => "500"));
             }
+        } else {
+            $result["code"] = "success";
+            $result["message"] = "已点赞 ";
+            $result["status"] = "501";
+        }
 
         $response = rest_ensure_response($result);
         return $response;
@@ -682,15 +682,15 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         $postid = $request['postid'];
 
         if (empty($openid) || empty($postid)) {
-                return new WP_Error('error', '参数错误', array('status' => 400));
-            } else {
-                if (!username_exists($openid)) {
-                        return new WP_Error('error', '不允许提交', array('status' => 400));
-                    }
-                if (is_wp_error(get_post($postid))) {
-                        return new WP_Error('error', 'postId参数错误', array('status' => 400));
-                    }
+            return new WP_Error('error', '参数错误', array('status' => 400));
+        } else {
+            if (!username_exists($openid)) {
+                return new WP_Error('error', '不允许提交', array('status' => 400));
             }
+            if (is_wp_error(get_post($postid))) {
+                return new WP_Error('error', 'postId参数错误', array('status' => 400));
+            }
+        }
 
         return true;
     }
@@ -698,12 +698,12 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
     {
         $openid = $request['openid'];
         if (empty($openid)) {
-                return new WP_Error('error', 'openid is empty', array('status' => 500));
-            } else {
-                if (!username_exists($openid)) {
-                        return new WP_Error('error', '不允许提交', array('status' => 500));
-                    }
+            return new WP_Error('error', 'openid is empty', array('status' => 500));
+        } else {
+            if (!username_exists($openid)) {
+                return new WP_Error('error', '不允许提交', array('status' => 500));
             }
+        }
 
         return true;
     }

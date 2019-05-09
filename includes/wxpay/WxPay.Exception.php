@@ -7,8 +7,8 @@
  */
 class RAM_WxPayException extends Exception
 {
-	public function errorMessage()
-	{
-		return $this->getMessage();
-	}
+    public function errorMessage()
+    {
+        return $this->getMessage();
+    }
 }

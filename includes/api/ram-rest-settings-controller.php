@@ -34,16 +34,16 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
     {
         $wf_enable_comment_option  = get_option('wf_enable_comment_option');
         if (empty($wf_enable_comment_option)) {
-                $result["code"] = "success";
-                $result["message"] = "获取是否开启评论成功";
-                $result["status"] = "200";
-                $result["enableComment"] = "0";
-            } else {
-                $result["code"] = "success";
-                $result["message"] = "获取是否开启评论成功";
-                $result["status"] = "200";
-                $result["enableComment"] = "1";
-            }
+            $result["code"] = "success";
+            $result["message"] = "获取是否开启评论成功";
+            $result["status"] = "200";
+            $result["enableComment"] = "0";
+        } else {
+            $result["code"] = "success";
+            $result["message"] = "获取是否开启评论成功";
+            $result["status"] = "200";
+            $result["enableComment"] = "1";
+        }
         $response = rest_ensure_response($result);
         return $response;
     }

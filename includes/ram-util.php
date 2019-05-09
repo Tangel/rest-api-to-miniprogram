@@ -85,8 +85,8 @@ function getPostImages($content, $postId)
     // }
 
     if (empty($post_frist_image)) {
-            $post_frist_image = '';
-        }
+        $post_frist_image = '';
+    }
 
     $post_thumbnail_image_150 = '';
     // $post_medium_image_300='';
@@ -122,24 +122,24 @@ function getPostImages($content, $postId)
     }
 
     if (!empty($post_frist_image) && empty($post_thumbnail_image)) {
-            $post_thumbnail_image = $post_frist_image;
-            // $post_thumbnail_image_150=$content_first_image;
-        }
+        $post_thumbnail_image = $post_frist_image;
+        // $post_thumbnail_image_150=$content_first_image;
+    }
 
     if (!empty($post_frist_image) && empty($post_medium_image)) {
-            $post_medium_image = $post_frist_image;
-            // $post_medium_image_300=$content_first_image;
+        $post_medium_image = $post_frist_image;
+        // $post_medium_image_300=$content_first_image;
 
-        }
+    }
 
     if (!empty($post_frist_image) && empty($post_large_image)) {
-            $post_large_image = $post_frist_image;
-            // $post_thumbnail_image_624=$content_first_image;
-        }
+        $post_large_image = $post_frist_image;
+        // $post_thumbnail_image_624=$content_first_image;
+    }
 
     if (!empty($post_frist_image) && empty($post_full_image)) {
-            $post_full_image = $post_frist_image;
-        }
+        $post_full_image = $post_frist_image;
+    }
 
     //$post_all_images = get_attached_media( 'image', $postId);
     // $post_all_images = get_post_content_images($content);
@@ -169,16 +169,16 @@ function get_post_content_images($post_content)
     preg_match_all('|<img.*?src=[\'"](.*?)[\'"].*?>|i', do_shortcode($post_content), $matches);
     $images = array();
     if ($matches && isset($matches[1])) {
-            $_images = $matches[1];
+        $_images = $matches[1];
 
-            for ($i = 0; $i < count($matches[1]); $i++) {
-                $imageurl['imagesurl'] = $matches[1][$i];
-                $imageurl['id'] = 'image' . $i;
-                $images[] = $imageurl;
-            }
-
-            return $images;
+        for ($i = 0; $i < count($matches[1]); $i++) {
+            $imageurl['imagesurl'] = $matches[1][$i];
+            $imageurl['id'] = 'image' . $i;
+            $images[] = $imageurl;
         }
+
+        return $images;
+    }
 
     return null;
 }
@@ -443,14 +443,14 @@ function decrypt_data($appid, $sessionKey, $encryptedData, $iv, &$data)
     );
 
     if (strlen($sessionKey) != 24) {
-            return $errors['IllegalAesKey'];
-        }
+        return $errors['IllegalAesKey'];
+    }
     $aesKey = base64_decode($sessionKey);
 
 
     if (strlen($iv) != 24) {
-            return $errors['IllegalIv'];
-        }
+        return $errors['IllegalIv'];
+    }
     $aesIV = base64_decode($iv);
 
     $aesCipher = base64_decode($encryptedData);
@@ -459,11 +459,11 @@ function decrypt_data($appid, $sessionKey, $encryptedData, $iv, &$data)
 
     $dataObj = json_decode($result);
     if ($dataObj  == NULL) {
-            return $errors['IllegalBuffer'];
-        }
+        return $errors['IllegalBuffer'];
+    }
     if ($dataObj->watermark->appid != $appid) {
-            return $errors['IllegalBuffer'];
-        }
+        return $errors['IllegalBuffer'];
+    }
     $data = $result;
     return $errors['OK'];
 }

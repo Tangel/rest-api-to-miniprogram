@@ -62,8 +62,8 @@ class RAW_REST_Payment_Controller  extends WP_REST_Controller
 
         if (!is_numeric($totalFee)) {
 
-                return new WP_Error('error', "totalfee参数错误", array('status' => 400));
-            }
+            return new WP_Error('error', "totalfee参数错误", array('status' => 400));
+        }
 
 
         $appId = RAM_WxPayConfig::get_appid();
@@ -110,12 +110,12 @@ class RAW_REST_Payment_Controller  extends WP_REST_Controller
     {
         $openId = isset($request['openid']) ? $request['openid'] : "";
         if (empty($openId) || !username_exists($openId)) {
-                return new WP_Error('user_parameter_error', "用户参数错误", array('status' => 400));
-            }
+            return new WP_Error('user_parameter_error', "用户参数错误", array('status' => 400));
+        }
         $totalFee = isset($request['totalfee']) ? (int)$request['totalfee'] : 1;
         if (!is_int($totalFee)) {
-                return new WP_Error('error', 'totalfee参数错误', array('status' => 400));
-            }
+            return new WP_Error('error', 'totalfee参数错误', array('status' => 400));
+        }
         return true;
     }
 

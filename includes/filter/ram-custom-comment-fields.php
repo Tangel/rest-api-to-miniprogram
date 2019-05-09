@@ -12,16 +12,16 @@ function custom_comment_fields($data, $comment, $request)
     $parent_date = $comment->parent_date;
     $formId = $comment->formId;
     if (empty($formId)) {
-            $formId = "";
-        }
+        $formId = "";
+    }
 
     if (empty($parent_name)) {
-            $parent_name = "";
-        }
+        $parent_name = "";
+    }
 
     if (empty($parent_date)) {
-            $parent_date = "";
-        }
+        $parent_date = "";
+    }
 
     $_data['parent_name'] = $parent_name;
     $_data['parent_date'] = $parent_date;
