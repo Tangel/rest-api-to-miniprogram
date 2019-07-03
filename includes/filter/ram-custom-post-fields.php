@@ -109,7 +109,7 @@ function custom_post_fields($data, $post, $request)
         $_data['next_post_title'] = !empty($next_post->post_title) ? $next_post->post_title : null;
         $_data['previous_post_id'] = !empty($previous_post->ID) ? $previous_post->ID : null;
         $_data['previous_post_title'] = !empty($previous_post->post_title) ? $previous_post->post_title : null;
-        $init_np_images_url = "~" . BLOG_URL . "wp-content/uploads/([0-9]{4}/[0-9]{2}/(\w+(\-?\w)*)\.(jpg|png|jpeg))~i";
+        $init_np_images_url = "~" . BLOG_URL . "app/uploads/([0-9]{4}/[0-9]{2}/(\w+(\-?\w)*)\.(jpg|png|jpeg))~i";
         if ($is_chrome) {
             $cdn_np_images_url = esc_attr(get_option('wf_cdn_url')) . "wp-content/uploads/$1.webp";
         } else {

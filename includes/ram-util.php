@@ -33,7 +33,7 @@ function get_post_image_url($image_id, $size = 'full')
 function cdn_images_url_replace($url)
 {
     global $is_chrome;
-    $init_image_url = "~" . BLOG_URL . "wp-content/uploads/([0-9]{4}/[0-9]{2}/(\S+)\.(jpg|png|jpeg))~i";
+    $init_image_url = "~" . BLOG_URL . "app/uploads/([0-9]{4}/[0-9]{2}/(\S+)\.(jpg|png|jpeg))~i";
     if ($is_chrome) {
         $cdn_image_url = esc_attr(get_option('wf_cdn_url')) . "wp-content/uploads/$1.webp";
     } else {
