@@ -111,9 +111,9 @@ function custom_post_fields($data, $post, $request)
         $_data['previous_post_title'] = !empty($previous_post->post_title) ? $previous_post->post_title : null;
         $init_np_images_url = "~" . BLOG_URL . "app/uploads/([0-9]{4}/[0-9]{2}/(\w+(\-?\w)*)\.(jpg|png|jpeg))~i";
         if ($is_chrome) {
-            $cdn_np_images_url = esc_attr(get_option('wf_cdn_url')) . "wp-content/uploads/$1.webp";
+            $cdn_np_images_url = esc_attr(get_option('wf_cdn_url')) . "app/uploads/$1.webp";
         } else {
-            $cdn_np_images_url = esc_attr(get_option('wf_cdn_url')) . "wp-content/uploads/$1";
+            $cdn_np_images_url = esc_attr(get_option('wf_cdn_url')) . "app/uploads/$1";
         }
         $next_post_thumbnail_image = preg_replace($init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail_url($next_post->ID, 'thumbnail'));
         $previous_post_thumbnail_image = preg_replace($init_np_images_url, $cdn_np_images_url, get_the_post_thumbnail_url($previous_post->ID, 'thumbnail'));
