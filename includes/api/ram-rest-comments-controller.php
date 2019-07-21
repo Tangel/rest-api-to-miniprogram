@@ -188,6 +188,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             if (!empty($formId)) {
                 $addcommentmetaflag = add_comment_meta($comment_id, 'formId', $formId, false);
             }
+            update_comment_meta($comment_id, 'wxapp_user', 'true');
             $result["code"] = "success";
             $message = '留言成功';
 
