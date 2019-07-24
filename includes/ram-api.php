@@ -44,6 +44,7 @@ class RAM_API extends WP_REST_Controller
         include_once('api/ram-rest-posts-controller.php');
         include_once('api/ram-rest-comments-controller.php');
         include_once('api/ram-rest-weixin-controller.php');
+        include_once('api/ram-rest-qq-controller.php');
         include_once('api/ram-rest-settings-controller.php');
         // include_once( 'api/ram-rest-payment-controller.php' );
         // include_once( 'api/ram-rest-categories-controller.php' );
@@ -61,6 +62,7 @@ class RAM_API extends WP_REST_Controller
         $controllers = array(
             'RAM_REST_Posts_Controller',
             'RAM_REST_Weixin_Controller',
+            'RAM_REST_QQ_Controller',
             'RAM_REST_Comments_Controller',
             'RAM_REST_Options_Controller',
             // 'RAW_REST_Payment_Controller',

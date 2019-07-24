@@ -34,6 +34,9 @@ function register_weixinappsettings()
     register_setting('weixinapp-group', 'wf_avatar_cdn_url');
     register_setting('weixinapp-group', 'wf_enable_comment_option');
     register_setting('weixinapp-group', 'wf_enable_comment_check');
+
+    register_setting('weixinapp-group', 'qq_appid');
+    register_setting('weixinapp-group', 'qq_secret');
 }
 
 function weixinapp_settings_page()
@@ -67,13 +70,23 @@ function weixinapp_settings_page()
                         <div class="section">
                             <table class="form-table">
                                 <tr valign="top">
-                                    <th scope="row">AppID</th>
+                                    <th scope="row">微信 AppID</th>
                                     <td><input type="text" name="wf_appid" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wf_appid')); ?>" />* </td>
                                 </tr>
 
                                 <tr valign="top">
-                                    <th scope="row">AppSecret</th>
+                                    <th scope="row">微信 AppSecret</th>
                                     <td><input type="text" name="wf_secret" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wf_secret')); ?>" />* </td>
+                                </tr>
+
+                                <tr valign="top">
+                                    <th scope="row">QQ AppID</th>
+                                    <td><input type="text" name="qq_appid" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('qq_appid')); ?>" />* </td>
+                                </tr>
+
+                                <tr valign="top">
+                                    <th scope="row">QQ AppSecret</th>
+                                    <td><input type="text" name="qq_secret" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('qq_secret')); ?>" />* </td>
                                 </tr>
 
                                 <tr valign="top">

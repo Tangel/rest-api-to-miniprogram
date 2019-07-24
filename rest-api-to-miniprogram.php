@@ -32,6 +32,8 @@ if (!class_exists('RestAPIMiniProgram')) {
     class RestAPIMiniProgram
     {
         public $wxapi = null;
+
+        public $qq = null;
         public function __construct()
         {
             //定制化内容输出，对pc端和api都生效
@@ -64,6 +66,8 @@ if (!class_exists('RestAPIMiniProgram')) {
 
             new RAM_API(); //api
             $this->wxapi = new RAW_Weixin_API();
+
+            $this->qqapi = new RAW_QQ_API();
         }
     }
 
