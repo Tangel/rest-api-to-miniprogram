@@ -93,7 +93,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $result["status"] = "500";
             } else {
 
-                $sql = "SELECT * from " . $wpdb->posts . "  where ID in  
+                $sql = "SELECT * from " . $wpdb->posts . "  where ID in
         (SELECT comment_post_ID from " . $wpdb->comments . " where user_id=" . $user_id . "   GROUP BY comment_post_ID order by comment_date ) LIMIT 20";
                 $_posts = $wpdb->get_results($sql);
                 $posts = array();
@@ -188,7 +188,11 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             if (!empty($formId)) {
                 $addcommentmetaflag = add_comment_meta($comment_id, 'formId', $formId, false);
             }
-            update_comment_meta($comment_id, 'wxapp_user', 'true');
+            if (strpos($author_url, "thirdqq.qlogo.cn") === false) {
+                update_comment_meta($comment_id, 'wxapp_user', 'true');
+            } else {
+                update_comment_meta($comment_id, 'qqapp_user', 'true');
+            }
             $result["code"] = "success";
             $message = '留言成功';
 

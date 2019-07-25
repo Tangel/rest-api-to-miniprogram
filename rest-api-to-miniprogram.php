@@ -20,6 +20,7 @@ const REST_API_TO_MINIPROGRAM_PLUGIN_NAME = 'rest-api-to-miniprogram';
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-util.php');
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-api.php');
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-weixin-api.php');
+include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/ram-qq-api.php');
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/settings/wp-wechat-config.php');
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/filter/ram-custom-comment-fields.php');
 include(REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'includes/filter/ram-custom-content.php');

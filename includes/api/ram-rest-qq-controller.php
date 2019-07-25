@@ -169,13 +169,19 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
                 return new WP_Error('error', 'API错误：' . json_encode($api_result), array('status' => 502));
             }
             $openId = $api_result['openid'];
-            $sessionKey = $api_result['session_key'];
-            // $access_result =decrypt_data($appid, $sessionKey,$encryptedData, $iv, $data);
-            // if($access_result !=0) {
-            //     return new WP_Error( 'error', '解密错误：' . $access_result, array( 'status' => 503 ) );
-            // }
             $userId = 0;
-            // $data = json_decode( $data, true );
+            $sessionKey = $api_result['session_key'];
+            $data = '';
+            $access_result = decrypt_data($appid, $sessionKey, $encryptedData, $iv, $data);
+            if ($access_result != 0) {
+                return new WP_Error('error', '解密错误：' . $access_result, array('status' => 503));
+            } else {
+                $data = json_decode($data, true);
+                $watermark_appid = $data['watermark']['appid'];
+                if ($watermark_appid !== $appid) {
+                    return new WP_Error('error', 'AppID 不一致', ['status' => 502]);
+                }
+            }
             $nickname = filterEmoji($nickname);
             $_nickname = base64_encode($nickname);
             $_nickname = strlen($_nickname) > 49 ? substr($_nickname, 49) : $_nickname;
@@ -220,6 +226,7 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
             $result["message"] = "获取用户信息成功";
             $result["status"] = "200";
             $result["openid"] = $openId;
+            // $result["data"] = $data;
             $result["userLevel"] = $userLevel;
             $response = rest_ensure_response($result);
             return $response;
