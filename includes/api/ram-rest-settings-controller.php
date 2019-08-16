@@ -32,7 +32,7 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
 
     public function getEnableComment($request)
     {
-        if (preg_match('/MicroMessenger/i', $_SERVER['HTTP_USER_AGENT'])) {
+        if (preg_match('/MicroMessenger/', $_SERVER['HTTP_USER_AGENT'])) {
             $option  = get_option('wf_enable_comment_option_wechat');
             if (empty($option)) {
                 $result["code"] = "success";
@@ -45,7 +45,7 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
                 $result["status"] = "200";
                 $result["enableComment"] = "1";
             }
-        } else if (preg_match('/(qqdevtools|MiniApp)/i', $_SERVER['HTTP_USER_AGENT'])) {
+        } else if (preg_match('/(QQ\/MiniApp|qqdevtools)/', $_SERVER['HTTP_USER_AGENT'])) {
             $option  = get_option('wf_enable_comment_option_qq');
             if (empty($option)) {
                 $result["code"] = "success";
