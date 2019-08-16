@@ -32,17 +32,37 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
 
     public function getEnableComment($request)
     {
-        $wf_enable_comment_option  = get_option('wf_enable_comment_option');
-        if (empty($wf_enable_comment_option)) {
-            $result["code"] = "success";
-            $result["message"] = "获取是否开启评论成功";
+        if (preg_match('/MicroMessenger/i', $_SERVER['HTTP_USER_AGENT'])) {
+            $option  = get_option('wf_enable_comment_option_wechat');
+            if (empty($option)) {
+                $result["code"] = "success";
+                $result["message"] = "获取是否开启评论成功";
+                $result["status"] = "200";
+                $result["enableComment"] = "0";
+            } else {
+                $result["code"] = "success";
+                $result["message"] = "获取是否开启评论成功";
+                $result["status"] = "200";
+                $result["enableComment"] = "1";
+            }
+        } else if (preg_match('/(qqdevtools|MiniApp)/i', $_SERVER['HTTP_USER_AGENT'])) {
+            $option  = get_option('wf_enable_comment_option_qq');
+            if (empty($option)) {
+                $result["code"] = "success";
+                $result["message"] = "获取是否开启评论成功";
+                $result["status"] = "200";
+                $result["enableComment"] = "0";
+            } else {
+                $result["code"] = "success";
+                $result["message"] = "获取是否开启评论成功";
+                $result["status"] = "200";
+                $result["enableComment"] = "1";
+            }
+        } else {
+            $result["code"] = "error";
+            $result["message"] = "User-Agent 异常";
             $result["status"] = "200";
             $result["enableComment"] = "0";
-        } else {
-            $result["code"] = "success";
-            $result["message"] = "获取是否开启评论成功";
-            $result["status"] = "200";
-            $result["enableComment"] = "1";
         }
         $response = rest_ensure_response($result);
         return $response;

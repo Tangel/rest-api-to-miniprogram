@@ -32,7 +32,8 @@ function register_weixinappsettings()
     register_setting('weixinapp-group', 'wf_poster_imageurl');
     register_setting('weixinapp-group', 'wf_cdn_url');
     register_setting('weixinapp-group', 'wf_avatar_cdn_url');
-    register_setting('weixinapp-group', 'wf_enable_comment_option');
+    register_setting('weixinapp-group', 'wf_enable_comment_option_wechat');
+    register_setting('weixinapp-group', 'wf_enable_comment_option_qq');
     register_setting('weixinapp-group', 'wf_enable_comment_check');
 
     register_setting('weixinapp-group', 'qq_appid');
@@ -122,22 +123,23 @@ function weixinapp_settings_page()
                                 <tr valign="top">
                                     <th scope="row">开启小程序的评论</th>
                                     <td>
-
+                                        微信小程序：
                                         <?php
-
-                                        $wf_enable_comment_option = get_option('wf_enable_comment_option');
-                                        $checkbox = empty($wf_enable_comment_option) ? '' : 'checked';
-                                        echo '<input name="wf_enable_comment_option"  type="checkbox"  value="1" ' . $checkbox . ' />';
-
-
+                                        $wf_enable_comment_option_wechat = get_option('wf_enable_comment_option_wechat');
+                                        $checkbox = empty($wf_enable_comment_option_wechat) ? '' : 'checked';
+                                        echo '<input name="wf_enable_comment_option_wechat"  type="checkbox"  value="1" ' . $checkbox . ' />';
+                                        ?>
+                                        &emsp;&emsp;&emsp;&emsp;QQ 小程序：
+                                        <?php
+                                        $wf_enable_comment_option_qq = get_option('wf_enable_comment_option_qq');
+                                        $checkbox = empty($wf_enable_comment_option_qq) ? '' : 'checked';
+                                        echo '<input name="wf_enable_comment_option_qq"  type="checkbox"  value="1" ' . $checkbox . ' />';
                                         ?>
                                         &emsp;&emsp;&emsp;&emsp;开启评论审核
-
                                         <?php
                                         $wf_enable_comment_check = get_option('wf_enable_comment_check');
                                         $checkbox1 = empty($wf_enable_comment_check) ? '' : 'checked';
                                         echo '<input name="wf_enable_comment_check"  type="checkbox"  value="1" ' . $checkbox1 . ' />';
-
                                         ?>
                                     </td>
                                 </tr>
