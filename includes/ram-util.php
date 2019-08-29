@@ -46,8 +46,8 @@ function cdn_images_url_replace($url)
 function content_format($str)
 {
 
-    $str = preg_replace('/<!-- wp:\w+( {\S+})? -->(\s*<p>)?/i', '', $str);
-    $str = preg_replace('/(<\/p>\s*)?<!-- \/wp:\w+ -->/i', '', $str);
+    $str = preg_replace('/<!-- wp:\w+( {\S+})? -->(\s*)?(<p>)?/i', '$3', $str);
+    $str = preg_replace('/(<\/p>)?(\s*)?<!-- \/wp:\w+ -->/i', '$1', $str);
 
     $str = preg_replace('/<blockquote \w*="\S+"><p>/i', '<blockquote>', $str);
     $str = preg_replace('/<\/p><\/blockquote>/i', '</blockquote>', $str);
@@ -519,7 +519,7 @@ function  getUserLevel($userId)
             FROM
                 " . $wpdb->usermeta . " t
             WHERE
-                t.meta_key = '" . $wpdb->prefix . "user_level' 
+                t.meta_key = '" . $wpdb->prefix . "user_level'
             AND t.user_id =%d", $userId);
 
     $level = $wpdb->get_var($sql);
