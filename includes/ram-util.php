@@ -46,6 +46,8 @@ function cdn_images_url_replace($url)
 function content_format($str)
 {
 
+    $str = preg_replace('/(?<!ul\>|li\>|p\>|\d\>|\/\>|\n)\r(?!\r)/i', '<p></p>', $str);
+
     $str = preg_replace('/<!-- wp:\w+( {\S+})? -->(\s*)?(<p>)?/i', '$3', $str);
     $str = preg_replace('/(<\/p>)?(\s*)?<!-- \/wp:\w+ -->/i', '$1', $str);
 
