@@ -9,7 +9,7 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
 
     public function __construct()
     {
-        $this->namespace     = 'watch-life-net/v1';
+        $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'weixin';
     }
 
@@ -142,14 +142,14 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         $openId =$request['openid'];
         $nickname=empty($request['nickname'])?'':$request['nickname'];
         $nickname=filterEmoji($nickname);
-        $_nickname=base64_encode($nickname);          
+        $_nickname=base64_encode($nickname);
 		$_nickname=strlen($_nickname)>49?substr($_nickname,49):$_nickname;
-        $avatarUrl=empty($request['avatarUrl'])?'':$request['avatarUrl']; 
+        $avatarUrl=empty($request['avatarUrl'])?'':$request['avatarUrl'];
         $user = get_user_by( 'login', $openId);
         if(empty($user))
         {
             return new WP_Error( 'error', '此用户不存在' , array( 'status' => 500 ) );
-        }     
+        }
         $userdata =array(
             'ID'            => $user->ID,
             'first_name'    => $nickname,
@@ -161,8 +161,8 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         $userId =wp_update_user($userdata);
         if(is_wp_error($userId)){
             return new WP_Error( 'error', '更新wp用户错误：' , array( 'status' => 500 ) );
-        } 
-                
+        }
+
         update_user_meta($userId,'avatar',$avatarUrl);
         update_user_meta($userId,'usertype',"weixin","weixin");
 
@@ -171,7 +171,7 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         $result["message"]= "更新成功";
         $result["status"]="200";
         $result["openid"]=$openId;
-        $result["userLevel"]=$userLevel;            
+        $result["userLevel"]=$userLevel;
         $response = rest_ensure_response($result);
         return $response;
     }
@@ -222,24 +222,24 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
             $api_result  = json_decode($access_result, true);
             if( empty( $api_result['openid'] ) || empty( $api_result['session_key'] )) {
                 return new WP_Error('error', 'API错误：' . json_encode( $api_result ), array( 'status' => 502 ) );
-            }            
-            $openId = $api_result['openid']; 
-            $sessionKey = $api_result['session_key'];                    
-            // $access_result =decrypt_data($appid, $sessionKey,$encryptedData, $iv, $data);                   
+            }
+            $openId = $api_result['openid'];
+            $sessionKey = $api_result['session_key'];
+            // $access_result =decrypt_data($appid, $sessionKey,$encryptedData, $iv, $data);
             // if($access_result !=0) {
             //     return new WP_Error( 'error', '解密错误：' . $access_result, array( 'status' => 503 ) );
             // }
-            $userId=0;           
-            // $data = json_decode( $data, true );  
-            $nickname=filterEmoji($nickname);         
-            $_nickname=base64_encode($nickname);          
+            $userId=0;
+            // $data = json_decode( $data, true );
+            $nickname=filterEmoji($nickname);
+            $_nickname=base64_encode($nickname);
 		    $_nickname=strlen($_nickname)>49?substr($_nickname,49):$_nickname;
-            // $avatarUrl= $data['avatarUrl'];             
-            if(!username_exists($openId) ) {                
+            // $avatarUrl= $data['avatarUrl'];
+            if(!username_exists($openId) ) {
                 $new_user_data = apply_filters( 'new_user_data', array(
                     'user_login'    => $openId,
                     'first_name'	=> $nickname ,
-                    'nickname'      => $nickname,                    
+                    'nickname'      => $nickname,
                     'user_nicename' => $_nickname,
                     'display_name'  => $nickname,
                     'user_pass'     => $openId,
@@ -253,9 +253,9 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
                 update_user_meta( $userId,'avatar',$avatarUrl);
                 update_user_meta($userId,'usertype',"weixin");
 
-            }            
+            }
             else{
-                $user = get_user_by( 'login', $openId);     
+                $user = get_user_by( 'login', $openId);
                 $userdata =array(
                     'ID'            => $user->ID,
                     'first_name'    => $nickname,
@@ -267,19 +267,19 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
                 $userId =wp_update_user($userdata);
                 if(is_wp_error($userId)){
                     return new WP_Error( 'error', '更新wp用户错误：' , array( 'status' => 500 ) );
-                }             
+                }
                 update_user_meta($userId,'avatar',$avatarUrl);
                 update_user_meta($userId,'usertype',"weixin","weixin");
-                
-                  
+
+
             }
             $userLevel= getUserLevel($userId);
             $result["code"]="success";
-            
+
             $result["message"]= "获取用户信息成功";
             $result["status"]="200";
             $result["openid"]=$openId;
-            $result["userLevel"]=$userLevel;            
+            $result["userLevel"]=$userLevel;
             $response = rest_ensure_response($result);
             return $response;
         }
@@ -456,13 +456,13 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         $path = $request['path'];
         $openid = $request['openid'];
 
-        $qrcodeName = 'qrcode-' . $postid . '.png'; //文章小程序二维码文件名     
+        $qrcodeName = 'qrcode-' . $postid . '.png'; //文章小程序二维码文件名
         $qrcodeurl = REST_API_TO_MINIPROGRAM_PLUGIN_DIR . 'qrcode/' . $qrcodeName; //文章小程序二维码路径
         // api.js - getPosterUrl() / getPosterQrcodeUrl()
         // $qrcodeurl = PLUGIN_DIR.'wp-rest-api-for-app/qrcode/'.$qrcodeName;
 
         $qrcodeimgUrl = plugins_url() . '/' . REST_API_TO_MINIPROGRAM_PLUGIN_NAME . '/qrcode/' . $qrcodeName;
-        //自定义参数区域，可自行设置      
+        //自定义参数区域，可自行设置
         $appid = get_option('wf_appid');
         $appsecret = get_option('wf_secret');
 
@@ -552,7 +552,7 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         if (empty($openid)  || empty($template_id) || empty($postid) || empty($form_id) || empty($total_fee) || empty($flag) || empty($fromUser)) {
             return new WP_Error('error', '参数错误', array('status' => 500));
         } else if (!function_exists('curl_init')) {
-            return new WP_Error('error', 'php curl 
+            return new WP_Error('error', 'php curl
             扩展没有启用', array('status' => 500));
         }
         return true;

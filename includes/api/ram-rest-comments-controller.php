@@ -8,7 +8,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
 {
     public function __construct()
     {
-        $this->namespace     = 'watch-life-net/v1';
+        $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'comment';
     }
 
@@ -163,10 +163,10 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
 
         $commentdata = array(
             'comment_post_ID' => $post, // to which post the comment will show up
-            'comment_author' => $author_name, //fixed value - can be dynamic 
-            'comment_author_email' => $author_email, //fixed value - can be dynamic 
-            'comment_author_url' => $author_url, //fixed value - can be dynamic 
-            'comment_content' => $content, //fixed value - can be dynamic 
+            'comment_author' => $author_name, //fixed value - can be dynamic
+            'comment_author_email' => $author_email, //fixed value - can be dynamic
+            'comment_author_url' => $author_url, //fixed value - can be dynamic
+            'comment_content' => $content, //fixed value - can be dynamic
             'comment_type' => '', //empty for regular comments, 'pingback' for pingbacks, 'trackback' for trackbacks
             'comment_parent' => $parent, //0 if it's not a reply to another comment; if it's a reply, mention the parent comment ID here
             'user_id' => $user_id, //passing current user ID or any predefined as per the demand

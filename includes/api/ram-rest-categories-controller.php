@@ -11,7 +11,7 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
     public function __construct()
     {
 
-        $this->namespace     = 'watch-life-net/v1';
+        $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'category';
     }
 
@@ -117,7 +117,7 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
             $user_id = $user->ID;
             $usermeta = get_user_meta($user_id);
             if (!empty($usermeta)) {
-                //$usermetaList =$wpdb->get_results($sql);        
+                //$usermetaList =$wpdb->get_results($sql);
                 $result["code"] = "success";
                 $result["message"] = "获取订阅成功";
                 $result["status"] = "200";

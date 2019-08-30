@@ -9,7 +9,7 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
 
     public function __construct()
     {
-        $this->namespace     = 'watch-life-net/v1';
+        $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'qq';
     }
 
