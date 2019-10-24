@@ -71,10 +71,10 @@ function content_format($str)
     $str = preg_replace('/\[hide( t="\S+")?\]/i', '', $str);
     $str = preg_replace('/\[\/hide\]/i', '', $str);
 
-    $str = preg_replace('/\[st( t="\d+")?( n="\w+")?\]/i', '', $str);
-    $str = preg_replace('/\[\/ts\]/i', '', $str);
+    $str = preg_replace('/\[st( t=\'\d+\')?( n=\'\w+\')?\]/i', '', $str);
+    $str = preg_replace('/\[\/st\]/i', '', $str);
 
-    $str = preg_replace('/\[code( l="\w+")?\]/i', '', $str);
+    $str = preg_replace('/\[code( l=\'\w+\')?\]/i', '', $str);
     $str = preg_replace('/\[\/code\]/i', '', $str);
 
     $str = preg_replace('/\[caption id="\w+" align="\w+" width="\d+"\]/i', '', $str);
