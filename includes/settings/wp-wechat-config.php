@@ -7,7 +7,7 @@ if (!defined('ABSPATH')) {
 function weixinapp_create_menu()
 {
     // 创建新的顶级菜单
-    add_menu_page('微信小程序设置', '微信小程序设置', 'administrator', 'weixinapp_slug', 'weixinapp_settings_page', plugins_url('rest-api-to-miniprogram/includes/images/icon16.png'), null);
+    add_menu_page('小程序设置', '小程序设置', 'administrator', 'weixinapp_slug', 'weixinapp_settings_page', plugins_url('rest-api-to-miniprogram/includes/images/icon16.png'), null);
     // 调用注册设置函数
     add_action('admin_init', 'register_weixinappsettings');
 }
@@ -45,7 +45,7 @@ function weixinapp_settings_page()
     ?>
     <div class="wrap">
 
-        <h2>微信小程序设置</h2>
+        <h2>小程序设置</h2>
 
 
         <p>Rest API to miniprogram by <a href="https://www.watch-life.net" target="_blank">守望轩</a>.
