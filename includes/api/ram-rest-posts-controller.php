@@ -195,6 +195,23 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
             'schema' => array( $this, 'get_public_item_schema' ),
         ) );
         */
+        register_rest_route($this->namespace, '/' . $this->resource_name . '/mydetail', array(
+            // Here we register the readable endpoint for collections.
+            array(
+                'methods'   => 'GET',
+                'callback'  => array($this, 'getmyDetail'),
+                'permission_callback' => array($this, 'get_mydetail_permissions_check'),
+                'args'               => array(
+                    'openid' => array(
+                        'required' => true
+                    )
+
+                )
+
+            ),
+            // Register our schema callback.
+            'schema' => array($this, 'get_public_item_schema'),
+        ));
     }
     /*
     function getallpraise ($request)
@@ -538,14 +555,13 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
 
         global $wpdb;
         $postSwipeIDs = get_option('wf_swipe');
-        $posts =array();
-        if(!empty($postSwipeIDs))
-        {
-            $sql="SELECT *  from ".$wpdb->posts." where id in(".$postSwipeIDs.") ORDER BY find_in_set(id,'".$postSwipeIDs."')";
+        $posts = array();
+        if (!empty($postSwipeIDs)) {
+            $sql = "SELECT *  from " . $wpdb->posts . " where id in(" . $postSwipeIDs . ") ORDER BY find_in_set(id,'" . $postSwipeIDs . "')";
             $_posts = $wpdb->get_results($sql);
 
             foreach ($_posts as $post) {
-                $post_id = (int)$post->ID;
+                $post_id = (int) $post->ID;
                 $post_title = stripslashes($post->post_title);
                 $post_date = $post->post_date;
                 $post_permalink = get_permalink($post->ID);
@@ -555,7 +571,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
                 $_data["post_permalink"] = $post_permalink;
                 $_data['type'] = "detailpage";
 
-                $pageviews = (int)get_post_meta($post_id, 'views', true);
+                $pageviews = (int) get_post_meta($post_id, 'views', true);
                 $_data['pageviews'] = $pageviews;
 
                 $comment_total = $wpdb->get_var("SELECT COUNT(1) FROM " . $wpdb->comments . " where  comment_approved = '1' and comment_post_ID=" . $post_id);
@@ -674,6 +690,39 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         return $response;
     }
 
+    public function getmyDetail($request)
+    {
+        global $wpdb;
+        $openid = $request['openid'];
+        $user_id = 0;
+        $user = get_user_by('login', $openid);
+        $like_sql = "SELECT count(*) from " . $wpdb->posts . "  where ID in
+(SELECT post_id from " . $wpdb->postmeta . " where meta_value='like' and meta_key='_" . $openid . "') ORDER BY post_date desc LIMIT 20";
+        $likeCount = $wpdb->get_var($like_sql);
+        if ($user) {
+            $user_id = $user->ID;
+            if ($user_id == 0) {
+                $result["status"] = "error";
+                $result["message"] = "用户参数错误";
+                $result["code"] = 500;
+            } else {
+                $comment_sql = "SELECT count(*) from " . $wpdb->posts . "  where ID in
+        (SELECT comment_post_ID from " . $wpdb->comments . " where user_id=" . $user_id . "   GROUP BY comment_post_ID order by comment_date ) LIMIT 20";
+                $commentCount = $wpdb->get_var($comment_sql);
+                $result["status"] = "success";
+                $result["message"] = "获取用户信息成功";
+                $result["code"] = 200;
+                $result["data"]["likeCount"] = $likeCount;
+                $result["data"]["commentCount"] = $commentCount;
+            }
+        } else {
+            $result["status"] = "error";
+            $result["message"] = "用户参数错误";
+            $result["code"] = 500;
+        }
+        $response = rest_ensure_response($result);
+        return $response;
+    }
 
     public function post_like_permissions_check($request)
     {
@@ -710,7 +759,18 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
     }
     public function get_item_permissions_check($request)
     {
-
+        return true;
+    }
+    public function get_mydetail_permissions_check($request)
+    {
+        $openid = $request['openid'];
+        if (empty($openid)) {
+            return new WP_Error('error', 'openid is empty', array('status' => 500));
+        } else {
+            if (!username_exists($openid)) {
+                return new WP_Error('error', '不允许提交', array('status' => 500));
+            }
+        }
         return true;
     }
 
