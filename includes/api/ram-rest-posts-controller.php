@@ -199,7 +199,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
             // Here we register the readable endpoint for collections.
             array(
                 'methods'   => 'GET',
-                'callback'  => array($this, 'getmyDetail'),
+                'callback'  => array($this, 'getMyDetail'),
                 'permission_callback' => array($this, 'get_mydetail_permissions_check'),
                 'args'               => array(
                     'openid' => array(
@@ -690,7 +690,7 @@ class RAM_REST_Posts_Controller  extends WP_REST_Controller
         return $response;
     }
 
-    public function getmyDetail($request)
+    public function getMyDetail($request)
     {
         global $wpdb;
         $openid = $request['openid'];
