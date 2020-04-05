@@ -520,7 +520,7 @@ function filterEmoji($str)
     return $str;
 }
 
-function  getUserLevel($userId)
+function getUserLevel($userId)
 {
     global $wpdb;
     $sql = $wpdb->prepare("SELECT  t.meta_value

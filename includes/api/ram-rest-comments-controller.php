@@ -79,7 +79,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         ));
     }
 
-    function  getcomment($request)
+    function getcomment($request)
     {
         global $wpdb;
         $openid = $request['openid'];

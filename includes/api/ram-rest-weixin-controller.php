@@ -209,8 +209,8 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
         $iv = $request['iv'];
         $avatarUrl = $request['avatarUrl'];
         $nickname = empty($request['nickname']) ? '' : $request['nickname'];
-        $appid = get_option('wf_appid');
-        $appsecret = get_option('wf_secret');
+        $appid = get_option('wx_appid');
+        $appsecret = get_option('wx_secret');
         if (empty($appid) || empty($appsecret)) {
             return new WP_Error('error', 'appid或appsecret为空', array('status' => 500));
         } else {
@@ -299,8 +299,8 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
             $parent = (int)$request['parent'];
         }
 
-        $appid = get_option('wf_appid');
-        $appsecret = get_option('wf_secret');
+        $appid = get_option('wx_appid');
+        $appsecret = get_option('wx_secret');
         $page = '';
         if ($flag == '1'  || $flag == '2') {
             $total_fee = $total_fee . '元';
@@ -463,8 +463,8 @@ class RAM_REST_Weixin_Controller  extends WP_REST_Controller
 
         $qrcodeimgUrl = plugins_url() . '/' . REST_API_TO_MINIPROGRAM_PLUGIN_NAME . '/qrcode/' . $qrcodeName;
         //自定义参数区域，可自行设置
-        $appid = get_option('wf_appid');
-        $appsecret = get_option('wf_secret');
+        $appid = get_option('wx_appid');
+        $appsecret = get_option('wx_secret');
 
         //判断文章小程序二维码是否存在，如不存在，在此生成并保存
         if (!is_file($qrcodeurl)) {

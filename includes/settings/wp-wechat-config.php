@@ -21,8 +21,8 @@ function get_jquery_source() {
 function register_weixinappsettings()
 {
     // 注册设置
-    register_setting('weixinapp-group', 'wf_appid');
-    register_setting('weixinapp-group', 'wf_secret');
+    register_setting('weixinapp-group', 'wx_appid');
+    register_setting('weixinapp-group', 'wx_secret');
     register_setting('weixinapp-group', 'wf_swipe');
 
     register_setting('weixinapp-group', 'wf_mchid');
@@ -38,6 +38,9 @@ function register_weixinappsettings()
 
     register_setting('weixinapp-group', 'qq_appid');
     register_setting('weixinapp-group', 'qq_secret');
+
+    register_setting('weixinapp-group', 'approve_template_id');
+    register_setting('weixinapp-group', 'notify_template_id');
 }
 
 function weixinapp_settings_page()
@@ -72,12 +75,12 @@ function weixinapp_settings_page()
                             <table class="form-table">
                                 <tr valign="top">
                                     <th scope="row">微信 AppID</th>
-                                    <td><input type="text" name="wf_appid" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wf_appid')); ?>" />* </td>
+                                    <td><input type="text" name="wx_appid" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wx_appid')); ?>" />* </td>
                                 </tr>
 
                                 <tr valign="top">
                                     <th scope="row">微信 AppSecret</th>
-                                    <td><input type="text" name="wf_secret" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wf_secret')); ?>" />* </td>
+                                    <td><input type="text" name="wx_secret" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('wx_secret')); ?>" />* </td>
                                 </tr>
 
                                 <tr valign="top">
@@ -88,6 +91,16 @@ function weixinapp_settings_page()
                                 <tr valign="top">
                                     <th scope="row">QQ AppSecret</th>
                                     <td><input type="text" name="qq_secret" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('qq_secret')); ?>" />* </td>
+                                </tr>
+
+                                <tr valign="top">
+                                    <th scope="row">订阅模板 id (评论审核)</th>
+                                    <td><input type="text" name="approve_template_id" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('approve_template_id')); ?>" />* </td>
+                                </tr>
+
+                                <tr valign="top">
+                                    <th scope="row">订阅模板 id (评论回复通知))</th>
+                                    <td><input type="text" name="notify_template_id" style="width:400px; height:40px" value="<?php echo esc_attr(get_option('notify_template_id')); ?>" />* </td>
                                 </tr>
 
                                 <tr valign="top">
