@@ -11,7 +11,7 @@ class RAW_Weixin_API
         $appid = get_option('wx_appid');
         $secret = get_option('wx_secret');
         if (!$appid || !$secret) {
-            return false;
+            return;
         }
         if (($access_token = get_option('weixin_access_token')) !== false && !empty($access_token) && time() < $access_token['expire_time']) {
             return $access_token['access_token'];
@@ -29,7 +29,7 @@ class RAW_Weixin_API
                 return $access_token['access_token'];
             }
         }
-        return false;
+        return;
     }
 
     // 获取微信公众平台API地址
@@ -169,10 +169,10 @@ class RAW_Weixin_API
     public static function send_subscribe($touser, $template_id, $page, $data)
     {
         $access_token = self::get_access_token();
-        $api = self::API('send_subscribe') . '?access_token=' . $access_token;
         if (!$access_token) {
-            return false;
+            return;
         }
+        $api = self::API('send_subscribe') . '?access_token=' . $access_token;
         $request = self::request($api, 'POST', [
             'touser' => $touser,
             'template_id' => $template_id,
