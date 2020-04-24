@@ -4,13 +4,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
 class RAM_REST_Categories_Controller  extends WP_REST_Controller
 {
-
     public function __construct()
     {
-
         $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'category';
     }
@@ -28,7 +25,6 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -48,7 +44,6 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -69,7 +64,6 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
                 $usermetas = $wpdb->get_results($sql);
                 $count = count($usermetas);
                 if ($count == 0) {
-
                     if (add_user_meta($user_id, "wl_sub", $categoryid, false)) {
                         $result["code"] = "success";
                         $result["message"] = "订阅成功";
@@ -97,12 +91,10 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
                 $result["status"] = "500";
             }
         } else {
-
             $result["code"] = "success";
             $result["message"] = "用户参数错误";
             $result["status"] = "500";
         }
-
         $response = rest_ensure_response($result);
         return $response;
     }
@@ -139,7 +131,6 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
             $result["message"] = "用户参数错误";
             $result["status"] = "501";
         }
-
         $response = rest_ensure_response($result);
         return $response;
     }
@@ -155,7 +146,6 @@ class RAM_REST_Categories_Controller  extends WP_REST_Controller
                 return new WP_Error('error', '不允许提交', array('status' => 500));
             }
         }
-
         return true;
     }
 

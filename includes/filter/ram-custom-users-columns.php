@@ -1,11 +1,13 @@
 <?php
 //禁止直接访问
 if (!defined('ABSPATH')) exit;
+
 function users_columns($columns)
 {
     $columns['avatar'] = __('头像');
     return $columns;
 }
+
 function  output_users_columns($var, $columnName, $userId)
 {
     switch ($columnName) {
@@ -23,6 +25,5 @@ function  getAvatar($userId)
     } else {
         $avatarImg = '<img  src="' . $avatar . '"  width="20px" heigth="20px"/>';
     }
-
     return $avatarImg;
 }

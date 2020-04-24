@@ -492,7 +492,7 @@ function get_client_ip()
                 $ip = trim($ip);
                 //会过滤掉保留地址和私有地址段的IP，例如 127.0.0.1会被过滤
                 //也可以修改成正则验证IP
-                if ((bool)filter_var(
+                if ((bool) filter_var(
                     $ip,
                     FILTER_VALIDATE_IP,
                     FILTER_FLAG_IPV4 |

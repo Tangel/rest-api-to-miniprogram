@@ -6,10 +6,8 @@ if (!defined('ABSPATH')) {
 
 class RAM_REST_Options_Controller  extends WP_REST_Controller
 {
-
     public function __construct()
     {
-
         $this->namespace     = 'minazukisaki-lite/v1';
         $this->resource_name = 'options';
     }
@@ -23,7 +21,6 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
                 'methods'   => 'GET',
                 'callback'  => array($this, 'getEnableComment'),
                 'permission_callback' => array($this, 'get_item_permissions_check')
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -68,10 +65,8 @@ class RAM_REST_Options_Controller  extends WP_REST_Controller
         return $response;
     }
 
-
     public function get_item_permissions_check($request)
     {
-
         return true;
     }
 }

@@ -14,15 +14,12 @@ function custom_comment_fields($data, $comment, $request)
     if (empty($formId)) {
         $formId = "";
     }
-
     if (empty($parent_name)) {
         $parent_name = "";
     }
-
     if (empty($parent_date)) {
         $parent_date = "";
     }
-
     $_data['parent_name'] = $parent_name;
     $_data['parent_date'] = $parent_date;
     $_data['userid'] = $userid;

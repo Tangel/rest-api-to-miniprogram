@@ -25,7 +25,6 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -54,7 +53,6 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -67,12 +65,10 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 'callback'  => array($this, 'getcomment'),
                 'permission_callback' => array($this, 'get_comment_permissions_check'),
                 'args'               => array(
-
                     'openid' => array(
                         'required' => true
                     )
                 )
-
             ),
             // Register our schema callback.
             'schema' => array($this, 'get_public_item_schema'),
@@ -92,7 +88,6 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $result["message"] = "用户参数错误";
                 $result["status"] = "500";
             } else {
-
                 $sql = "SELECT * from " . $wpdb->posts . "  where ID in
         (SELECT comment_post_ID from " . $wpdb->comments . " where user_id=" . $user_id . "   GROUP BY comment_post_ID order by comment_date ) LIMIT 20";
                 $_posts = $wpdb->get_results($sql);
@@ -109,14 +104,10 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                     $_data["comment_total"] = $comment_total;
                     $_data['like_count'] = $like_count;
                     $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
-                    // $_data['content_first_image'] = $images['content_first_image'];
-                    // $_data['post_medium_image_300'] = $images['post_medium_image_300'];
-                    // $_data['post_thumbnail_image_624'] = $images['post_thumbnail_image_624'];
                     $_data['post_frist_image'] = $images['post_frist_image'];
                     $_data['post_medium_image'] = $images['post_medium_image'];
                     $_data['post_large_image'] = $images['post_large_image'];
                     $_data['post_full_image'] = $images['post_full_image'];
-                    // $_data['post_all_images'] = $images['post_all_images'];
                     $posts[] = $_data;
                 }
                 $result["code"] = "success";
@@ -135,32 +126,27 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
     }
     function add_comment($request)
     {
-
-        $post = isset($request['post']) ? (int)$request['post'] : 0;
+        $post = isset($request['post']) ? (int) $request['post'] : 0;
         $author_name = $request['author_name'];
         $author_email = $request['author_email'];
         $content = $request['content'];
         $author_url = $request['author_url'];
         $openid = $request['openid'];
         $parent = $request['parent'];
-        $userid = isset($request['userid']) ? (int)$request['userid'] : 0; //被回复者
+        $userid = isset($request['userid']) ? (int) $request['userid'] : 0; //被回复者
         $formId = isset($request['formId']) ? $request['formId'] : "";
-
         $authorIp = get_client_ip();
         $authorIp = empty($authorIp) ? '' : $authorIp;
-
         $wf_enable_comment_check = get_option('wf_enable_comment_check');
         $comment_approved = "1";
         if (!empty($wf_enable_comment_check)) {
             $comment_approved = "0";
         }
-
         global $wpdb;
         $user_id = 0;
         $useropenid = "";
         $sql = "SELECT ID FROM " . $wpdb->users . " WHERE user_login='" . $openid . "'";
-        $user_id = (int)$wpdb->get_var($sql); //评论者id
-
+        $user_id = (int) $wpdb->get_var($sql); //评论者id
         $commentdata = array(
             'comment_post_ID' => $post, // to which post the comment will show up
             'comment_author' => $author_name, //fixed value - can be dynamic
@@ -173,9 +159,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             'comment_author_IP' => $authorIp,
             'comment_approved' => $comment_approved
         );
-
         $comment_id = wp_insert_comment(wp_filter_comment($commentdata));
-
         if (empty($comment_id)) {
             return new WP_Error('error', '添加评论失败', array('status' => 500));
         } else {
@@ -195,11 +179,9 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             }
             $result["code"] = "success";
             $message = '留言成功';
-
             if (!empty($wf_enable_comment_check)) {
                 $message = '留言已提交,需管理员审核方可显示。';
             }
-
             if ($addcommentmetaflag) {
                 $result["formId"] = "添加评论和formId成功";
             } else {
@@ -216,16 +198,15 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
     function get_comments($request)
     {
         global $wpdb;
-        $postid = isset($request['postid']) ? (int)$request['postid'] : 0;
-        $limit = isset($request['limit']) ? (int)$request['limit'] : 0;
-        $page = isset($request['page']) ? (int)$request['page'] : 0;
+        $postid = isset($request['postid']) ? (int) $request['postid'] : 0;
+        $limit = isset($request['limit']) ? (int) $request['limit'] : 0;
+        $page = isset($request['page']) ? (int) $request['page'] : 0;
         $order = isset($request['order']) ? $request['order'] : '';
         if (empty($order)) {
             $order = "asc";
         }
         $page = ($page - 1) * $limit;
         $sql = $wpdb->prepare("SELECT t.*,(SELECT t2.meta_value  from " . $wpdb->commentmeta . "  t2 where  t.comment_ID = t2.comment_id  AND t2.meta_key = 'formId')  AS formId FROM " . $wpdb->comments . " t WHERE t.comment_post_ID =%d and t.comment_parent=0 and t.comment_approved='1' order by t.comment_date " . $order . " limit %d,%d", $postid, $page, $limit);
-
         $comments = $wpdb->get_results($sql);
         $commentslist  = array();
         foreach ($comments as $comment) {
@@ -257,8 +238,6 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         $result["message"] = "获取评论成功";
         $result["status"] = "200";
         $result["data"] = $commentslist;
-
-
         $response = rest_ensure_response($result);
         return $response;
     }
@@ -269,7 +248,6 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         if ($limit > 0) {
             $commentslist  = array();
             $sql = $wpdb->prepare("SELECT t.*,(SELECT t2.meta_value  from " . $wpdb->commentmeta . "  t2 where  t.comment_ID = t2.comment_id  AND t2.meta_key = 'formId')  AS formId FROM " . $wpdb->comments . " t WHERE t.comment_post_ID =%d and t.comment_parent=%d and t.comment_approved='1' order by comment_date " . $order, $postid, $comment_id);
-
             $comments = $wpdb->get_results($sql);
             foreach ($comments as $comment) {
                 $data["id"] = $comment->comment_ID;
@@ -300,14 +278,13 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
 
     public function get_item_permissions_check($request)
     {
-        $postid = isset($request['postid']) ? (int)$request['postid'] : 0;
-        $limit = isset($request['limit']) ? (int)$request['limit'] : 0;
-        $page = isset($request['page']) ? (int)$request['page'] : 0;
+        $postid = isset($request['postid']) ? (int) $request['postid'] : 0;
+        $limit = isset($request['limit']) ? (int) $request['limit'] : 0;
+        $page = isset($request['page']) ? (int) $request['page'] : 0;
         $order = isset($request['order']) ? $request['order'] : '';
         if (empty($order)) {
             $order = "asc";
         }
-
         if (empty($postid) || empty($limit) || empty($page) || get_post($postid) == null) {
             return new WP_Error('error', ' 参数不能为空：postid,limit,page', array('status' => 500));
         } elseif (!is_numeric($limit) || !is_numeric($page) ||  !is_numeric($postid)) {
@@ -322,18 +299,16 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         if (empty($openid)) {
             return new WP_Error('error', '参数错误', array('status' => 500));
         } else {
-
             if (!username_exists($openid)) {
                 return new WP_Error('error', '不允许提交', array('status' => 500));
             }
         }
-
         return true;
     }
 
     function add_comment_permissions_check($request)
     {
-        $post = (int)$request['post'];
+        $post = (int) $request['post'];
         $author_name = $request['author_name'];
         $author_email = $request['author_email'];
         $content = $request['content'];
@@ -342,26 +317,22 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         $reqparent = '0';
         $userid = 0;
         $formId = '';
-
         if (isset($request['userid'])) {
-            $userid = (int)$request['userid'];
+            $userid = (int) $request['userid'];
         }
-
         if (isset($request['formId'])) {
             $formId = $request['formId'];
         }
-
         if (isset($request['parent'])) {
             $reqparent = $request['parent'];
         }
         $parent = 0;
         if (is_numeric($reqparent)) {
-            $parent = (int)$reqparent;
+            $parent = (int) $reqparent;
             if ($parent < 0) {
                 $parent = 0;
             }
         }
-
         if ($parent != 0) {
             $comment = get_comment($parent);
             if (empty($comment)) { {
@@ -369,11 +340,9 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 }
             }
         }
-
         if (empty($openid) || empty($post)  || empty($author_url)  || empty($author_email)  || empty($content) || empty($author_name)) {
             return new WP_Error('error', '参数错误', array('status' => 500));
         }
-
         if (get_post($post) == null || $post == 0 || !is_int($post)) {
             return new WP_Error('error', 'postId 参数错误', array('status' => 500));
         } else {
@@ -382,23 +351,19 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             }
             global $wpdb;
             $status = $wpdb->get_row($wpdb->prepare("SELECT post_status, comment_status FROM $wpdb->posts WHERE ID = %d", $post));
-
             if (in_array($status->post_status, array('draft', 'pending'))) {
                 return new WP_Error('error', '文章尚未发布', array('status' => 500));
             }
         }
-
         // if(!empty($formId) && strlen($formId>50))
         // {
         //     return new WP_Error( 'error', 'fromId参数错误', array( 'status' => 500 ) );
         // }
-
         if (!username_exists($openid)) {
             return new WP_Error('error', '不允许提交', array('status' => 500));
         } else if (is_wp_error(get_post($post))) {
             return new WP_Error('error', 'postId 参数错误', array('status' => 500));
         }
-
         return  true;
     }
 }

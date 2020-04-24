@@ -8,28 +8,20 @@ function custom_post_fields($data, $post, $request)
     $_data = $data->data;
     $post_id = $post->ID;
     $content = get_the_content();
-    // $content_protected=$_data['content']['protected'];
-    // $raw = empty($_data['content']['raw']) ? '' : $_data['content']['raw'];
     $siteurl = get_option('siteurl');
     $upload_dir = wp_upload_dir();
     $content = str_replace('http:' . strstr($siteurl, '//'), 'https:' . strstr($siteurl, '//'), $content);
     $content = str_replace('http:' . strstr($upload_dir['baseurl'], '//'), 'https:' . strstr($upload_dir['baseurl'], '//'), $content);
     $_content = cdn_images_url_replace($content);
-    // $_content['raw'] = $raw;//古腾堡编辑器需要该属性，否则报错
-    // $_content['protected'] =$content_protected;
     $_data['content']['rendered'] = content_format($_content);
     $postImageUrl = get_option("wf_poster_imageurl");
     $_data['postImageUrl'] = empty($postImageUrl) ? '' : $postImageUrl;
     $images = getPostImages($content, $post_id);
     $_data['post_thumbnail_image'] = $images['post_thumbnail_image'];
-    // $_data['content_first_image']=$images['content_first_image'];
-    // $_data['post_medium_image_300']=$images['post_medium_image_300'];
-    // $_data['post_thumbnail_image_624']=$images['post_thumbnail_image_624'];
     $_data['post_frist_image'] = $images['post_frist_image'];
     $_data['post_medium_image'] = $images['post_medium_image'];
     $_data['post_large_image'] = $images['post_large_image'];
     $_data['post_full_image'] = $images['post_full_image'];
-    // $_data['post_all_images']=$images['post_all_images'];
     $video_cover = get_post_meta($post_id, 'video_cover', true);
     $video_cover_poster = get_post_meta($post_id, 'video_cover_poster', true);
     $_data['video_cover'] = $video_cover;
@@ -41,29 +33,25 @@ function custom_post_fields($data, $post, $request)
         $_data['category_name'] = $category[0]->cat_name;
     }
     $post_date = $post->post_date;
-    //$_data['date'] =time_tran($post_date);
     $_data['post_date'] = time_tran($post_date);
     $sql = $wpdb->prepare("SELECT COUNT(1) FROM " . $wpdb->postmeta . " where meta_value='like' and post_id=%d", $post_id);
     $like_count = $wpdb->get_var($sql);
     $_data['like_count'] = $like_count;
-    $post_views = (int)get_post_meta($post_id, 'views', true);
+    $post_views = (int) get_post_meta($post_id, 'views', true);
     $params = $request->get_params();
     if (isset($params['id'])) {
         $sql = $wpdb->prepare("SELECT meta_key , (SELECT id from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as id ,(SELECT display_name from " . $wpdb->users . " WHERE user_login=substring(meta_key,2)) as display_name  FROM " . $wpdb->postmeta . " where meta_value='like' and post_id=%d", $post_id);
         $likes = $wpdb->get_results($sql);
-        // $_data['sql'] = $sql;
         $avatarurls = array();
         foreach ($likes as $like) {
             $userId = $like->id;
             $display_name = $like->display_name;
             $pos = stripos($display_name, 'wx.qlogo.cn');
             if ($pos) {
-
                 $avatar = $display_name;
             } else {
                 $avatar = get_user_meta($userId, 'avatar', true);
             }
-
             $_avatarurl['avatarurl']  = $avatar;
             $avatarurls[] = $_avatarurl;
         }
@@ -88,7 +76,7 @@ function custom_post_fields($data, $post, $request)
           AND post_type = 'post'
           AND term_id IN (" . $tags . ")
           AND ID != '" . $post_id . "'
-          AND post_date BETWEEN '" . $fristday . "' AND '" . $today . "' 
+          AND post_date BETWEEN '" . $fristday . "' AND '" . $today . "'
           ORDER BY  RAND()
           LIMIT 5";
             $related_posts = $wpdb->get_results($sql);

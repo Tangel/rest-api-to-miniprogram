@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) {
 
 class RAM_REST_QQ_Controller  extends WP_REST_Controller
 {
-
     public function __construct()
     {
         $this->namespace     = 'minazukisaki-lite/v1';
@@ -15,7 +14,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
 
     public function register_routes()
     {
-
         register_rest_route($this->namespace, '/' . $this->resource_name . '/getopenid', array(
             // Here we register the readable endpoint for collections.
             array(
@@ -39,7 +37,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             'schema' => array($this, 'get_public_item_schema'),
         ));
@@ -55,7 +52,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             'schema' => array($this, 'get_public_item_schema'),
         ));
@@ -77,7 +73,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
                         'required' => true
                     )
                 )
-
             ),
             'schema' => array($this, 'get_public_item_schema'),
         ));
@@ -107,10 +102,8 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
         if (is_wp_error($userId)) {
             return new WP_Error('error', '更新wp用户错误：', array('status' => 500));
         }
-
         update_user_meta($userId, 'avatar', $avatarUrl);
         update_user_meta($userId, 'usertype', "qq", "qq");
-
         $userLevel = getUserLevel($userId);
         $result["code"] = "success";
         $result["message"] = "更新成功";
@@ -123,19 +116,16 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
 
     function getUserInfo($request)
     {
-
         $openId = $request['openid'];
         $_user = get_user_by('login', $openId);
         if (empty($_user)) {
             return new WP_Error('error', '无此用户信息', array('status' => 500));
         } else {
-
             $user['nickname'] = $_user->display_name;
             $avatar = get_user_meta($_user->ID, 'avatar', true);
             if (empty($avatar)) {
                 $avatar = plugins_url() . "/" . REST_API_TO_MINIPROGRAM_PLUGIN_NAME . "/includes/images/gravatar.png";
             }
-
             $userLevel = getUserLevel($_user->ID);
             $user['userLevel'] = $userLevel;
             $user['avatar'] = $avatar;
@@ -200,7 +190,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
                 if (is_wp_error($userId) || empty($userId) ||  $userId == 0) {
                     return new WP_Error('error', '插入wordpress用户错误：', array('status' => 500));
                 }
-
                 update_user_meta($userId, 'avatar', $avatarUrl);
                 update_user_meta($userId, 'usertype', "qq");
             } else {
@@ -222,7 +211,6 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
             }
             $userLevel = getUserLevel($userId);
             $result["code"] = "success";
-
             $result["message"] = "获取用户信息成功";
             $result["status"] = "200";
             $result["openid"] = $openId;
@@ -262,6 +250,7 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
     {
         return true;
     }
+
     function  update_userInfo_permissions_check($request)
     {
         return true;
@@ -270,16 +259,15 @@ class RAM_REST_QQ_Controller  extends WP_REST_Controller
     function get_openid_permissions_check($request)
     {
         $js_code = $request['js_code'];
-        $encryptedData = $request['encryptedData'];
-        $iv = $request['iv'];
-        $avatarUrl = $request['avatarUrl'];
-        $nickname = empty($request['nickname']) ? '' : $request['nickname'];
+        // $encryptedData = $request['encryptedData'];
+        // $iv = $request['iv'];
+        // $avatarUrl = $request['avatarUrl'];
+        // $nickname = empty($request['nickname']) ? '' : $request['nickname'];
         if (empty($js_code)) {
             return new WP_Error('error', 'js_code是空值', array('status' => 500));
         } else if (!function_exists('curl_init')) {
             return new WP_Error('error', 'php  curl扩展没有启用', array('status' => 500));
         }
-
         return true;
     }
 }
