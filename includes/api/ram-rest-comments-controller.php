@@ -144,10 +144,11 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         }
         global $wpdb;
         $useropenid = "";
-        $user_id = 0;
+        $user_id = 0; //评论者的 ID
         if ($openid) {
             $sql = "SELECT ID FROM " . $wpdb->users . " WHERE user_login='" . $openid . "'";
-            $user_id = (int) $wpdb->get_var($sql) || 0; //评论者id
+            $query = $wpdb->get_var($sql);
+            $user_id = $query ? (int) $query : 0;
         }
         $commentdata = array(
             'comment_post_ID' => $post, // to which post the comment will show up
