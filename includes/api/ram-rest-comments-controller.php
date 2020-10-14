@@ -126,7 +126,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
     }
     function add_comment($request)
     {
-        $post = (int) $request['post'] || 0;
+        $post = (int) $request['post'];
         $author_name = $request['author_name'];
         $author_email = $request['author_email'];
         $content = $request['content'];
