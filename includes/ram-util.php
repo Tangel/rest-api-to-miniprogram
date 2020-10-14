@@ -54,10 +54,12 @@ function content_format($str)
     $str = preg_replace('/<blockquote \w*="\S+"><p>/i', '<blockquote>', $str);
     $str = preg_replace('/<\/p><\/blockquote>/i', '</blockquote>', $str);
 
-    $str = preg_replace('/<figure \w*="\S+">/i', '', $str);
-    $str = preg_replace('/<\/figure>/i', '', $str);
+    // $str = preg_replace('/<figure \w*="\S+">/i', '', $str);
+    // $str = preg_replace('/<\/figure>/i', '', $str);
 
-    $str = preg_replace('/<div class="[\s\S]+" style="\w+-\w+:url\((\S+)\)"><p class="\S+">[\s\S]+<\/p><\/div>/i', "<img src=\"$1\"/>", $str);
+    // $str = preg_replace('/<div class="[\s\S]+" style="\w+-\w+:url\((\S+)\)"><p class="\S+">[\s\S]+<\/p><\/div>/i', "<img class=\"lazy\" src=\"$1\" data-src=\"$1\" loading=\"lazy\"/>", $str);
+
+    $str = preg_replace('/<img src="(\S+)"/i', "<img class=\"lazy\" src=\"$1\" data-src=\"$1\" loading=\"lazy\"", $str);
 
     $str = preg_replace('/<\/li><li>/i', "</li>\n<li>", $str);
 

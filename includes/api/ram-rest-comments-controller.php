@@ -50,7 +50,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                         'required' => true
                     ),
                     'openid' => array(
-                        'required' => true
+                        'required' => false
                     )
                 )
             ),
@@ -126,7 +126,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
     }
     function add_comment($request)
     {
-        $post = isset($request['post']) ? (int) $request['post'] : 0;
+        $post = (int) $request['post'];
         $author_name = $request['author_name'];
         $author_email = $request['author_email'];
         $content = $request['content'];
@@ -135,18 +135,21 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         $parent = $request['parent'];
         $userid = isset($request['userid']) ? (int) $request['userid'] : 0; //被回复者
         $formId = isset($request['formId']) ? $request['formId'] : "";
-        $authorIp = get_client_ip();
-        $authorIp = empty($authorIp) ? '' : $authorIp;
+        $authorIp = empty(get_client_ip()) ? '' : get_client_ip();
+        $user_agent = isset($request['author_user_agent']) ? $request['author_user_agent'] : '';
         $wf_enable_comment_check = get_option('wf_enable_comment_check');
-        $comment_approved = "1";
+        $comment_approved = 1;
         if (!empty($wf_enable_comment_check)) {
-            $comment_approved = "0";
+            $comment_approved = 0;
         }
         global $wpdb;
-        $user_id = 0;
         $useropenid = "";
-        $sql = "SELECT ID FROM " . $wpdb->users . " WHERE user_login='" . $openid . "'";
-        $user_id = (int) $wpdb->get_var($sql); //评论者id
+        $user_id = 0; //评论者的 ID
+        if ($openid) {
+            $sql = "SELECT ID FROM " . $wpdb->users . " WHERE user_login='" . $openid . "'";
+            $query = $wpdb->get_var($sql);
+            $user_id = $query ? (int) $query : 0;
+        }
         $commentdata = array(
             'comment_post_ID' => $post, // to which post the comment will show up
             'comment_author' => $author_name, //fixed value - can be dynamic
@@ -157,8 +160,12 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             'comment_parent' => $parent, //0 if it's not a reply to another comment; if it's a reply, mention the parent comment ID here
             'user_id' => $user_id, //passing current user ID or any predefined as per the demand
             'comment_author_IP' => $authorIp,
-            'comment_approved' => $comment_approved
+            'comment_approved' => $comment_approved,
+            'comment_agent' => $user_agent,
         );
+        if (!empty($request['push_subscriber'])) {
+            $commentdata['comment_meta'] = ['push_subscriber' => $request['push_subscriber']];
+        }
         $comment_id = wp_insert_comment(wp_filter_comment($commentdata));
         if (empty($comment_id)) {
             return new WP_Error('error', '添加评论失败', array('status' => 500));
@@ -313,16 +320,16 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         $author_email = $request['author_email'];
         $content = $request['content'];
         $author_url = $request['author_url'];
-        $openid = $request['openid'];
+        // $openid = $request['openid'];
         $reqparent = '0';
-        $userid = 0;
-        $formId = '';
-        if (isset($request['userid'])) {
-            $userid = (int) $request['userid'];
-        }
-        if (isset($request['formId'])) {
-            $formId = $request['formId'];
-        }
+        // $userid = 0;
+        // $formId = '';
+        // if (isset($request['userid'])) {
+        //     $userid = (int) $request['userid'];
+        // }
+        // if (isset($request['formId'])) {
+        //     $formId = $request['formId'];
+        // }
         if (isset($request['parent'])) {
             $reqparent = $request['parent'];
         }
@@ -340,30 +347,30 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 }
             }
         }
-        if (empty($openid) || empty($post)  || empty($author_url)  || empty($author_email)  || empty($content) || empty($author_name)) {
+        if (empty($post) || empty($author_url) || empty($author_email) || empty($content) || empty($author_name)) {
             return new WP_Error('error', '参数错误', array('status' => 500));
         }
         if (get_post($post) == null || $post == 0 || !is_int($post)) {
             return new WP_Error('error', 'postId 参数错误', array('status' => 500));
-        } else {
-            if ((!comments_open($post)) || has_tag('excerpt', $post)) {
-                return new WP_Error('error', '该文章禁止吐槽', array('status' => 500));
-            }
-            global $wpdb;
-            $status = $wpdb->get_row($wpdb->prepare("SELECT post_status, comment_status FROM $wpdb->posts WHERE ID = %d", $post));
-            if (in_array($status->post_status, array('draft', 'pending'))) {
-                return new WP_Error('error', '文章尚未发布', array('status' => 500));
-            }
+        }
+        if ((!comments_open($post)) || has_tag('excerpt', $post)) {
+            return new WP_Error('error', '该文章禁止吐槽', array('status' => 500));
+        }
+        global $wpdb;
+        $status = $wpdb->get_row($wpdb->prepare("SELECT post_status, comment_status FROM $wpdb->posts WHERE ID = %d", $post));
+        if (in_array($status->post_status, array('draft', 'pending'))) {
+            return new WP_Error('error', '文章尚未发布', array('status' => 500));
         }
         // if(!empty($formId) && strlen($formId>50))
         // {
         //     return new WP_Error( 'error', 'fromId参数错误', array( 'status' => 500 ) );
         // }
-        if (!username_exists($openid)) {
-            return new WP_Error('error', '不允许提交', array('status' => 500));
-        } else if (is_wp_error(get_post($post))) {
+        // if (!username_exists($openid)) {
+        //     return new WP_Error('error', '不允许提交', array('status' => 500));
+        // }
+        if (is_wp_error(get_post($post))) {
             return new WP_Error('error', 'postId 参数错误', array('status' => 500));
         }
-        return  true;
+        return true;
     }
 }
