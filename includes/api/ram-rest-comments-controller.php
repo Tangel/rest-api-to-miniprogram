@@ -237,7 +237,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $data["formId"] = $comment->formId;
                 $data["userid"] = $comment->user_id;
                 $order = "asc";
-                $data["child"] = $this->getchildcomment($postid, $comment->comment_ID, 1, $order);
+                $data["child"] = $this->getchildcomment($postid, $comment->comment_ID, 2, $order);
                 $commentslist[] = $data;
             }
         }
