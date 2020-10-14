@@ -50,7 +50,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                         'required' => true
                     ),
                     'openid' => array(
-                        'required' => true
+                        'required' => false
                     )
                 )
             ),
