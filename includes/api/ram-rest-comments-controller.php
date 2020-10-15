@@ -221,6 +221,11 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $data["id"] = $comment->comment_ID;
                 $data["author_name"] = $comment->comment_author;
                 $author_url = $comment->comment_author_url;
+                if (!strpos($author_url, "qlogo.cn")) {
+                    $data["author_url"] = $author_url;
+                } else {
+                    $data["author_url"] = '';
+                }
                 $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
                 $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
                 $cdn_gravatar_url = esc_attr(get_option('wf_avatar_cdn_url')) == "" ? esc_attr(get_option('wf_cdn_url')) . "avatar/$1" : esc_attr(get_option('wf_avatar_cdn_url')) . "avatar/$1";
@@ -237,7 +242,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $data["formId"] = $comment->formId;
                 $data["userid"] = $comment->user_id;
                 $order = "asc";
-                $data["child"] = $this->getchildcomment($postid, $comment->comment_ID, 2, $order);
+                $data["child"] = $this->getchildcomment($postid, $comment->comment_ID, 5, $order);
                 $commentslist[] = $data;
             }
         }
@@ -260,6 +265,11 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 $data["id"] = $comment->comment_ID;
                 $data["author_name"] = $comment->comment_author;
                 $author_url = $comment->comment_author_url;
+                if (!strpos($author_url, "qlogo.cn")) {
+                    $data["author_url"] = $author_url;
+                } else {
+                    $data["author_url"] = '';
+                }
                 $author_gravatar_urls = esc_url(get_avatar_url($comment->comment_author_email));
                 $gravatar_avatar_url = "~https://secure\.gravatar\.com/avatar/(\S+)~i";
                 $cdn_gravatar_url = esc_attr(get_option('wf_avatar_cdn_url')) == "" ? esc_attr(get_option('wf_cdn_url')) . "avatar/$1" : esc_attr(get_option('wf_avatar_cdn_url')) . "avatar/$1";
