@@ -329,7 +329,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         $author_name = $request['author_name'];
         $author_email = $request['author_email'];
         $content = $request['content'];
-        $author_url = $request['author_url'];
+        // $author_url = $request['author_url'];
         // $openid = $request['openid'];
         $reqparent = '0';
         // $userid = 0;
@@ -357,11 +357,11 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
                 }
             }
         }
-        if (empty($post) || empty($author_url) || empty($author_email) || empty($content) || empty($author_name)) {
-            return new WP_Error('error', '参数错误', array('status' => 500));
+        if (empty($post) || empty($author_email) || empty($content) || empty($author_name)) {
+            return new WP_Error('error', '缺少所需参数', array('status' => 500));
         }
         if (get_post($post) == null || $post == 0 || !is_int($post)) {
-            return new WP_Error('error', 'postId 参数错误', array('status' => 500));
+            return new WP_Error('error', '参数 post 格式错误', array('status' => 500));
         }
         if ((!comments_open($post)) || has_tag('excerpt', $post)) {
             return new WP_Error('error', '该文章禁止吐槽', array('status' => 500));
@@ -379,7 +379,7 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
         //     return new WP_Error('error', '不允许提交', array('status' => 500));
         // }
         if (is_wp_error(get_post($post))) {
-            return new WP_Error('error', 'postId 参数错误', array('status' => 500));
+            return new WP_Error('error', '无效的 post 参数', array('status' => 500));
         }
         return true;
     }
