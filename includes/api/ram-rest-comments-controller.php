@@ -163,8 +163,8 @@ class RAM_REST_Comments_Controller  extends WP_REST_Controller
             'comment_approved' => $comment_approved,
             'comment_agent' => $user_agent,
         );
-        if (!empty($request['push_subscriber'])) {
-            $commentdata['comment_meta'] = ['push_subscriber' => $request['push_subscriber']];
+        if (!empty($request['subscription_uid'])) {
+            $commentdata['comment_meta'] = ['subscription_uid' => $request['subscription_uid']];
         }
         $comment_id = wp_insert_comment(wp_filter_comment($commentdata));
         if (empty($comment_id)) {
